@@ -1,0 +1,58 @@
+{{ if eq .chezmoi.os "darwin" }}
+# Aliases for mac os
+alias av='ansible-vault'
+alias b='brew'
+alias bat='bat -p'
+alias bu='brew update; brew upgrade --greedy; brew cleanup'
+alias bundle='nocorrect bundle'
+alias c='chezmoi'
+alias ca='cd ~/code/ansible'
+alias cat='bat'
+alias ccd='cd ~/.local/share/chezmoi'
+alias cs='chezmoi status'
+alias cw='cd ~/code/wildfireservice'
+alias dsclean="find . -type f -name '*.DS_Store' -ls -delete"
+alias k='kc'
+alias kc='kubecolor'
+alias kx='kubectx'
+alias ls='eza --header --long --classify --icons --sort modified --time-style iso'
+alias mtr='sudo mtr'
+alias nvimrc='nvim ~/.config/nvim/init.lua ~/.config/nvim/lua/**/*.lua'
+alias ot='tofu'
+alias s='kitten ssh'
+alias tf='terraform'
+alias tfsilent='grep -v "Refreshing state...\|Reading...\|Still reading...\|Read complete after"'
+alias tg='terragrunt'
+alias ts='tailscale'
+alias vim='nvim'
+{{ else }}
+# Aliases for non mac os
+alias c='~/bin/chezmoi'
+alias ca='cd ~/code/ansible'
+alias cs='~/bin/chezmoi status'
+{{ end }}
+# Aliases for every OS
+alias ...='cd $(git rev-parse --show-toplevel 2>/dev/null)'
+alias swarm-node-labels="docker node ls -q | xargs docker node inspect -f '{{ "{{" }} printf \"%30s\" .Description.Hostname {{ "}}" }} {{ "{{" }} .Spec.Availability {{ "}}" }}: {{ "{{" }} range \$k, \$v := .Spec.Labels {{ "}}" }}{{ "{{" }} \$k {{ "}}" }}={{ "{{" }} \$v {{ "}}" }} {{ "{{" }}end{{ "}}" }} {{ "{{" }} .Status.Addr {{ "}}" }}'"
+alias czshrc='c edit ~/.zshrc'
+alias czshaliases='c edit ~/.zsh_aliases'
+alias czshfunctions='c edit ~/.zsh_functions'
+alias digall='dig +noall +answer +multiline any'
+alias digs='dig +short'
+alias egrep='egrep --color=auto'
+alias env='env |sort'
+alias fgrep='fgrep --color=auto'
+alias g='git'
+alias gitconfig='c edit ~/.gitconfig'
+alias grep='grep --color=auto'
+alias gs='git status'
+alias ll='ls -lah'
+alias s='sudo -i'
+alias ssh-unsafe='ssh -o StrictHostKeyChecking=no'
+alias sshconfig='vim ~/.ssh/config'
+alias tmuxconf="vim ~/.config/tmux/tmux.conf"
+alias tmuxrc="tmuxconf"
+alias vimrc='vim ~/.vimrc'
+alias zshaliases='vim ~/.zsh_aliases'
+alias zshfunctions='vim ~/.zsh_functions'
+alias zshrc='vim ~/.zshrc'

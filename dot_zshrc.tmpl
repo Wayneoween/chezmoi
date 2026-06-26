@@ -1,0 +1,124 @@
+source ~/.zsh_aliases
+source ~/.zsh_functions
+{{ if eq .chezmoi.os "darwin" -}}
+ulimit -n 10240
+
+# brew
+# must be called before `compinit`
+FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+export HOMEBREW_AUTO_UPDATE_SECS=604800
+{{ end }}
+# zsh options
+
+## Completion and advanced prompt
+autoload -Uz compinit promptinit
+compinit
+promptinit
+
+## History
+HISTFILE=~/.zsh_history
+HISTSIZE=999999999
+SAVEHIST=$HISTSIZE
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_VERIFY
+setopt INC_APPEND_HISTORY
+setopt SHARE_HISTORY
+
+## zsh features
+setopt AUTO_CD
+unsetopt CORRECTALL
+# emacs keybindings
+bindkey -e
+# Shift-Tab for reverse tab completion selection
+bindkey '^[[Z' reverse-menu-complete
+
+export EDITOR=vim
+# https://github.com/aws/aws-cli/issues/9214
+export AWS_REQUEST_CHECKSUM_CALCULATION=when_required
+export AWS_RESPONSE_CHECKSUM_VALIDATION=when_required
+
+{{ if eq .chezmoi.os "darwin" -}}
+export HOMEBREW_EDITOR=$EDITOR
+## asdf loading
+##if [[ -f /opt/homebrew/opt/asdf/libexec/asdf.sh ]]; then
+##  . /opt/homebrew/opt/asdf/libexec/asdf.sh
+##fi
+## mise loading
+if [[ -f /opt/homebrew/bin/mise ]]; then
+  eval "$(/opt/homebrew/bin/mise activate zsh)"
+fi
+
+# GoLang Env
+export GOROOT=$(mise where golang)
+export GOPATH="$HOME/go"
+export GOBIN="$GOPATH/bin"
+path=("$GOBIN" $path)
+
+# Starship Prompt
+eval "$(starship init zsh)"
+
+# fzf loading
+eval "$(fzf --zsh)"
+
+# invoke zoxide
+[[ $commands[zoxide] ]] && eval "$(zoxide init zsh)"
+
+# gcloud
+GCLOUD_SDK_DIR="$(brew --prefix 2>/dev/null)/share/google-cloud-sdk"
+if [[ -f "$GCLOUD_SDK_DIR/path.zsh.inc" ]]; then
+  source "$GCLOUD_SDK_DIR/path.zsh.inc"
+fi
+if [[ -f "$GCLOUD_SDK_DIR/completion.zsh.inc" ]]; then
+  source "$GCLOUD_SDK_DIR/completion.zsh.inc"
+fi
+
+# kubectl completion
+[[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+
+# kubectl krew setup
+[[ $commands[krew] ]] && export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+# LM Studio CLI (lms)
+export PATH="$PATH:/Users/marius/.lmstudio/bin"
+
+{{ else -}}
+# mise loading
+if [[ -f ~/.local/bin/mise ]]; then
+  eval "$(~/.local/bin/mise activate zsh)"
+fi
+# grml prompt and functions
+source ~/.zsh/grml-zsh-includes/grml.zsh
+{{ end -}}
+
+## asdf
+#if [ -f ~/.asdf/asdf.sh ]; then
+#  source ~/.asdf/asdf.sh
+#fi
+
+# direnv loading
+eval "$(direnv hook zsh)"
+
+## zsh plugins
+### zsh-autosuggestions
+if [ -f ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+  source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
+### zsh-fzf-history-search
+# if [ -f ~/.zsh/zsh-fzf-history-search/zsh-fzf-history-search.zsh ]; then
+#   source ~/.zsh/zsh-fzf-history-search/zsh-fzf-history-search.zsh
+# fi
+### zsh-syntax-highlight - must be last
+if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+typeset -U path PATH
+path=("$HOME/.local/bin" $path)
+export PATH

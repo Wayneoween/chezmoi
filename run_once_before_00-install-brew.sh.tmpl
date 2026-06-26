@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+{{ if eq .chezmoi.os "darwin" }}
+if [ -f /opt/homebrew/bin/brew ]; then
+  echo "Homebrew is already installed"
+else
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+brew bundle
+{{ end -}}

@@ -1,0 +1,51 @@
+{
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "general": {
+    "previewFeatures": true,
+    "vimMode": true
+  },
+  "ui": {
+    "hideTips": true,
+    "hideBanner": true,
+    "hideFooter": true,
+    "accessibility": {
+      "enableLoadingPhrases": false
+    },
+    "loadingPhrases": "off"
+  },
+  "tools": {
+    "shell": {
+      "showColor": true
+    },
+    "enableHooks": true
+  },
+  "hooks": {
+    "BeforeTool": [
+      {
+        "matcher": "run_shell_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/marius/.gemini/hooks/rtk-hook-gemini.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "name": "tokentracker",
+            "type": "command",
+            "command": "/usr/bin/env node /Users/marius/.tokentracker/bin/notify.cjs --source=gemini"
+          }
+        ],
+        "matcher": "exit|clear|logout|prompt_input_exit|other"
+      }
+    ]
+  }
+}

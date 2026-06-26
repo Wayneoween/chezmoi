@@ -1,0 +1,129 @@
+{{ if eq .chezmoi.os "darwin" }}
+# Regenerate Brewfile and store it in the user's home directory
+function update_brewfile() {
+  echo "Regenerating Brewfile in the home directory..."
+  brew bundle dump --force --brews --casks --taps --no-vscode --no-go --file="$HOME/Brewfile"
+  echo "Brewfile has been successfully regenerated."
+}
+{{ end }}
+# Update and Cleanup asdf plugins
+update_asdf_plugins() {
+  echo "Updating all asdf plugins..."
+  asdf plugin update --all
+
+  # Helper Function to extract current active version
+  get_current_version() {
+    local plugin=$1
+    asdf current "$plugin" | awk '{print $2}' # Extract the currently active version
+  }
+
+  # Declare associative array for cleanup phase
+  typeset -A delete_versions
+
+  # Check and offer updates for each plugin
+  IFS=$'\n' plugins=($(asdf plugin list))
+  for plugin in "${plugins[@]}"; do
+    echo "Checking updates for $plugin..."
+
+    # Extract the current version
+    current_version=$(get_current_version "$plugin")
+    latest_version=$(asdf latest "$plugin")
+
+    # Debug: Print extracted versions
+    echo "Current version of $plugin: $current_version"
+    echo "Latest version of $plugin: $latest_version"
+
+    if [[ -z "$current_version" ]]; then
+      echo "Unable to determine the current version of $plugin"
+      continue # Skip to the next iteration
+    fi
+    if [[ "$current_version" == "system" ]]; then
+      continue # Skip to the next iteration
+    fi
+
+    if [[ "$current_version" != "$latest_version" ]]; then
+      echo "A newer version of $plugin is available: $latest_version (current: $current_version)"
+      read "update?Do you want to update $plugin to $latest_version? (y/n) "
+
+      if [[ "$update" == "y" ]]; then
+        asdf install "$plugin" "$latest_version"
+        read "set_global?Do you want to set $plugin version $latest_version as the global default? (y/N) "
+        if [[ "$set_global" == "y" ]]; then
+          asdf global "$plugin" "$latest_version"
+        fi
+      else
+        echo "Skipping update for $plugin..."
+      fi
+    else
+      echo "$plugin is up-to-date."
+    fi
+
+    # Collect versions for cleanup phase
+    delete_versions[$plugin]=$(asdf list "$plugin" | grep -Eo '^[ 0-9]+\.[0-9]+\.[0-9]+' | sort -V)
+  done
+
+  # Cleanup phase: Ask to delete older versions
+  echo "Starting cleanup phase..."
+  for plugin in "${(k)delete_versions[@]}"; do
+    echo "Checking installed versions for $plugin..."
+    versions=(${(z)delete_versions[$plugin]})
+    for version in "${versions[@]}"; do
+      read "delete?Do you want to delete $plugin version $version? (y/N) "
+      if [[ "$delete" == "y" ]]; then
+        asdf uninstall "$plugin" "$version"
+        echo "Deleted $plugin version $version."
+      else
+        echo "Keeping $plugin version $version."
+      fi
+    done
+  done
+
+  echo "Update and cleanup process completed."
+}
+
+clean_branches() {
+    # 1. Prune: Update local list of remote branches, removing those deleted on server
+    echo "Fetching and pruning..."
+    git fetch -p
+
+    # 2. Identify: Find local branches where the upstream is marked [gone]
+    # git branch -vv shows upstream status like [origin/branch: gone]
+    local branches_to_delete=$(git branch -vv | grep ': gone]' | awk '{print $1}')
+
+    if [[ -z "$branches_to_delete" ]]; then
+        echo "No 'gone' branches found. (Are your remote branches deleted?)"
+        return 0
+    fi
+
+    echo "Found the following branches that are deleted on remote:"
+    echo "$branches_to_delete"
+    echo ""
+
+    # 3. Confirm and Destroy
+    read "reply?Delete these branches? (y/N) "
+    if [[ "$reply" =~ ^[Yy]$ ]]; then
+        echo "$branches_to_delete" | xargs git branch -D
+        echo "💥 Deleted."
+    else
+        echo "Aborted."
+    fi
+}
+
+function starttmux() {
+    if [ -z "$HOSTS" ]; then
+        echo -n "Please provide a list of hosts separated by spaces [ENTER]: "
+        read HOSTS
+    fi
+
+    local hosts=("${(@s: :)HOSTS}")
+    tmux has-session -t my_session 2>/dev/null || tmux new-session -d -s my_session
+
+    tmux new-window "ssh ${hosts[1]}"
+    hosts=("${hosts[@]:1}")
+    for i in "${hosts[@]}"; do
+        tmux split-window -h "ssh $i"
+        tmux select-layout tiled > /dev/null
+    done
+    tmux select-pane -t 0
+    tmux set-window-option synchronize-panes on > /dev/null
+}

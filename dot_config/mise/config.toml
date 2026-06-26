@@ -1,0 +1,37 @@
+[tools]
+
+# MacOS specific tools
+terraform = "1.15.6"
+terragrunt = "1.0.8"
+
+# Common tools
+ctop = "0.7.7"
+fzf = "0.73.1"
+go = "1.26.4"
+jd = "2.5.0"
+jq = "1.8.2"
+lazygit = "0.62.2"
+node = "26.3.1"
+prek = "0.4.5"
+python = "3.14"
+qdns = "0.19.12"
+rust = "1.96.0"
+uv = "0.11.24"
+kubectl = "1.36.2"
+kubectx = "0.11.0"
+krew = "0.5.0"
+neovim = "latest"
+mc = "latest"
+claude = "2.1.193"
+gh = "2.95.0"
+flux2 = "2.8.8"
+rtk = "0.42.4"
+tree-sitter = "0.26.9"
+"pipx:jc" = "1.25.7"
+
+[settings]
+idiomatic_version_file_enable_tools = ["python"]
+experimental = true
+
+[settings.python]
+compile = false

@@ -1,0 +1,27 @@
+# Chezmoi auto-creates this when permissions are granted in a session — not for tracking.
+.claude/
+
+# Local-only: internal infra scaffolding, kept on disk but never committed here.
+code/
+
+# Skills are installed by `npx skills` into ~/.agents/skills and recorded in the
+# lockfile. Don't commit vendored content or the lockfile — re-add them on a new
+# device with `npx skills`. Keeps future internal/private skills out of the repo
+# by default. Hand-authored personal skills (no upstream to restore from) are
+# allowlisted below so they survive a fresh bootstrap.
+dot_agents/skills/*
+dot_agents/dot_skill-lock.json
+!dot_agents/skills/anti-ai-writing-style/
+!dot_agents/skills/caveman/
+!dot_agents/skills/git-commit/
+!dot_agents/skills/grill-me/
+!dot_agents/skills/grill-with-docs/
+!dot_agents/skills/handoff/
+!dot_agents/skills/improve-codebase-architecture/
+!dot_agents/skills/karpathy-guidelines/
+!dot_agents/skills/ponytail/
+!dot_agents/skills/ponytail-audit/
+!dot_agents/skills/ponytail-debt/
+!dot_agents/skills/ponytail-review/
+!dot_agents/skills/prepare-rotss/
+!dot_agents/skills/thermo-nuclear-code-quality-review/

@@ -1,0 +1,29 @@
+{{- $osid := .chezmoi.os -}}
+{{- if .chezmoi.osRelease -}}
+{{-   if hasKey .chezmoi.osRelease "id" -}}
+{{-     $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{-   end -}}
+{{- end -}}
+
+encryption = "age"
+
+[age]
+  identity = "/Users/marius/.age/key.txt"
+  recipient = "age1cxdntfp3yt8vhuq3mn0zplr8hugv3vell0fnxxvm473j0tedgdtss8dj4u"
+
+[data]
+  osid = {{ $osid | quote }}
+
+[git]
+  autoCommit = true
+  autoPush = true
+  autoAdd = true
+
+[diff]
+  exclude = ["externals", "scripts"]
+
+{{- if lookPath "nvim" }}
+[merge]
+  command = "nvim"
+  args = ["-d"]
+{{- end }}

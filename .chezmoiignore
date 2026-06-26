@@ -1,0 +1,22 @@
+README.md
+LICENSE
+Makefile
+install
+settings.json
+tests/
+.vscode
+.ssh
+.github
+*.deb
+*.tar.gz
+.pre-commit-config.yaml
+{{ if ne .chezmoi.os "darwin" }}
+.config/starship.toml
+Brewfile
+{{ end }}
+
+{{ if or (eq .chezmoi.arch "armv6l") (eq .chezmoi.arch "armv7l") (eq .chezmoi.arch "arm") }}
+run_once_before_00-install-mise.sh.tmpl
+run_once_before_00-install-mise.sh
+.config/mise/config.toml
+{{ end }}

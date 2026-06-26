@@ -1,0 +1,115 @@
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	process = git-lfs filter-process
+	required = true
+	smudge = git-lfs smudge -- %f
+[user]
+	name = Marius Schuller
+	email = marius.schuller@ororatech.com
+	signingkey = ~/.ssh/id_ed25519.pub
+[alias]
+	b = branch
+	br = branch
+	ci = commit
+	co = checkout
+	commend = commit --amend --no-edit
+	git = !exec git
+	it = !git init && git commit -m “Initial commit” --allow-empty
+	logpretty = log --graph --decorate --pretty=oneline --abbrev-commit
+	p = push
+	pf = push --force-with-lease
+	pff = push --force
+	psuh = push
+	s = status
+	yolo = ! git commit -m \"$(curl -s https://whatthecommit.com/index.txt)\"
+	sis = status --ignore-submodules=all
+	smu = submodule update --init --recursive
+	undo = reset --soft HEAD^
+[merge]
+	ff = only
+	tool = vimdiff
+	conflictstyle = diff3
+[push]
+	default = current
+	autoSetupRemote = true
+[pull]
+	rebase = true
+[status]
+	showUntrackedFiles = all
+	submoduleSummary = true
+[transfer]
+	fsckobjects = true
+[fetch]
+	prune = true
+	prunetags = true
+	fsckobjects = true
+	writeCommitGraph = true
+[receive]
+	fsckobjects = true
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = true
+[submodule]
+	recurse = true
+[core]
+	editor = vim
+	excludesfile = ~/.gitignore
+	whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+	# https://git-scm.com/docs/git-update-index#_untracked_cache
+	untrackedCache = true
+	fsmonitor = false # needs exception for homebrew
+	pager = diff-so-fancy | less --tabs=4 -RFX
+	# http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/
+	trustctime = false
+	# http://michael-kuehnel.de/git/2014/11/21/git-mac-osx-and-german-umlaute.html
+	precomposeunicode = false
+[grep]
+	lineNumber = true
+[diff]
+	wsErrorHighlight = all
+	submodule = log
+	colorMoved = default
+[diff "ansible-vault"]
+	textconv = ansible-vault view
+	cachetextconv = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	func = 146 bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[diff-so-fancy]
+	stripLeadingSymbols = false
+[rerere]
+	enabled = true
+[branch]
+	sort = -committerdate
+[init]
+	defaultBranch = main
+[rebase]
+	autoStash = true
+[commit]
+	verbose = true
+	gpgsign = true
+[help]
+	autocorrect = prompt
+[url "ssh://git@github.com/"]
+	insteadOf = https://github.com/
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.hostname "tiamat") }}
+[gpg]
+	format = ssh
+{{ end }}
+[maintenance]
+	repo = /Users/marius/code/ansible
+	repo = /Users/marius/code/wildfireservice
+	repo = /Users/marius/private/gl/marius-schuller.de
