@@ -46,10 +46,6 @@ export AWS_RESPONSE_CHECKSUM_VALIDATION=when_required
 
 {{ if eq .chezmoi.os "darwin" -}}
 export HOMEBREW_EDITOR=$EDITOR
-## asdf loading
-##if [[ -f /opt/homebrew/opt/asdf/libexec/asdf.sh ]]; then
-##  . /opt/homebrew/opt/asdf/libexec/asdf.sh
-##fi
 ## mise loading
 if [[ -f /opt/homebrew/bin/mise ]]; then
   eval "$(/opt/homebrew/bin/mise activate zsh)"
@@ -96,11 +92,6 @@ fi
 # grml prompt and functions
 source ~/.zsh/grml-zsh-includes/grml.zsh
 {{ end -}}
-
-## asdf
-#if [ -f ~/.asdf/asdf.sh ]; then
-#  source ~/.asdf/asdf.sh
-#fi
 
 # direnv loading
 eval "$(direnv hook zsh)"
