@@ -18,12 +18,12 @@ node = "26.4.0"
 prek = "0.4.5"
 python = "3.14"
 qdns = "0.19.12"
-rtk = "0.42.4"
+rtk = "0.43.0"
 rust = "1.96.0"
 terraform = "1.15.7"
 terragrunt = "1.0.8"
 tree-sitter = "0.26.9"
-uv = "0.11.24"
+uv = "0.11.25"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
