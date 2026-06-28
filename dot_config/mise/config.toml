@@ -22,7 +22,7 @@ rtk = "0.43.0"
 rust = "1.96.0"
 terraform = "1.15.7"
 terragrunt = "1.0.8"
-tree-sitter = "0.26.9"
+tree-sitter = "0.26.10"
 uv = "0.11.25"
 
 [settings]
