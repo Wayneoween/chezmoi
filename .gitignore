@@ -1,3 +1,7 @@
+# macos...
+.DS_Store
+dot_DS_Store
+
 # Chezmoi auto-creates this when permissions are granted in a session — not for tracking.
 .claude/
 
