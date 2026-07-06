@@ -98,6 +98,8 @@ brew "exiftool"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# SDL2 compatibility layer that uses SDL3 behind the scenes
+brew "sdl2-compat"
 # H.265/HEVC encoder
 brew "x265"
 # Play, record, convert, and stream select audio and video codecs
@@ -106,8 +108,8 @@ brew "ffmpeg"
 brew "gawk"
 # GNU compiler collection
 brew "gcc"
-# Interact with Google Gemini AI models from the command-line
-brew "gemini-cli"
+# Geometry Engine
+brew "geos"
 # GitHub command-line tool
 brew "gh"
 # Distributed revision control system
@@ -254,8 +256,12 @@ brew "pngcrush"
 brew "poppler"
 # Object-relational database system
 brew "postgresql@17", link: true
+# Object-relational database system
+brew "postgresql@18"
 # Framework for managing multi-language pre-commit hooks
 brew "pre-commit"
+# Cartographic Projections Library
+brew "proj"
 # Monitor data's progress through a pipe
 brew "pv"
 # Password generator
