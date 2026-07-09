@@ -9,25 +9,25 @@
 {
   "agent_servers": {
     "github-copilot-cli": {
-      "type": "registry"
+      "type": "registry",
     },
     "opencode": {
-      "type": "registry"
+      "type": "registry",
     },
     "claude-acp": {
-      "type": "registry"
+      "type": "registry",
     },
     "codex-acp": {
-      "type": "registry"
-    }
+      "type": "registry",
+    },
   },
   "languages": {
     "Markdown": {
-      "remove_trailing_whitespace_on_save": true
-    }
+      "remove_trailing_whitespace_on_save": true,
+    },
   },
   "completions": {
-    "lsp_fetch_timeout_ms": 0
+    "lsp_fetch_timeout_ms": 0,
   },
   "document_symbols": "on",
   "document_folding_ranges": "on",
@@ -38,50 +38,50 @@
   "colorize_brackets": true,
   "indent_guides": {
     "background_coloring": "indent_aware",
-    "coloring": "indent_aware"
+    "coloring": "indent_aware",
   },
   "status_bar": {
-    "active_encoding_button": "enabled"
+    "active_encoding_button": "enabled",
   },
   "focus_follows_mouse": {
-    "enabled": true
+    "enabled": true,
   },
   "terminal": {
     "toolbar": {
-      "breadcrumbs": true
+      "breadcrumbs": true,
     },
     "font_size": 15.0,
-    "font_family": "JetBrainsMono Nerd Font Mono"
+    "font_family": "JetBrainsMono Nerd Font Mono",
   },
   "calls": {
-    "mute_on_join": true
+    "mute_on_join": true,
   },
   "edit_predictions": {
     "allow_data_collection": "no",
-    "provider": "copilot"
+    "provider": "copilot",
   },
   "agent": {
     "default_model": {
       "provider": "copilot_chat",
       "model": "gpt-5.3-codex",
       "enable_thinking": true,
-      "effort": "high"
+      "effort": "high",
     },
     "favorite_models": [],
     "model_parameters": [],
-    "thinking_display": "always_expanded"
+    "thinking_display": "always_expanded",
   },
   "telemetry": {
     "diagnostics": false,
-    "metrics": false
+    "metrics": false,
   },
   "git": {
     "inline_blame": {
-      "delay_ms": 900
-    }
+      "delay_ms": 900,
+    },
   },
   "inlay_hints": {
-    "enabled": false
+    "enabled": false,
   },
   "line_ending": "enforce_crlf",
   "diff_view_style": "unified",
@@ -89,7 +89,7 @@
   "unnecessary_code_fade": 0.7,
   "ui_font_family": ".ZedSans",
   "buffer_line_height": {
-    "custom": 1.399999976158142
+    "custom": 1.399999976158142,
   },
   "buffer_font_weight": 400.0,
   "icon_theme": "Catppuccin Mocha",
@@ -98,6 +98,7 @@
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Catppuccin Mocha"
-  }
+    "dark": "Catppuccin Mocha",
+  },
+  "vim_mode": true,
 }
