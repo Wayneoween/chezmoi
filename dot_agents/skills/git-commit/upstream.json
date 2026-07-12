@@ -1,8 +1,8 @@
 {
-  "source": "https://github.com/Flowm/dotfiles",
-  "path": "home/.agents/skills/git-commit",
-  "ref": "master",
-  "commit": "e01bab8d9dd39f69cb7afdf1b81b8f20c6cde882",
-  "pulledAt": "2026-06-29T14:49:26Z",
-  "contentHash": "7185bb52ab97748858ee86cdb2c63df6bd3123c549baf76233e29a03b8e8074d"
+  "source": "https://github.com/Flowm/skills",
+  "path": "skills/git-commit",
+  "ref": "main",
+  "commit": "1d1a7dd2a58f1465474f480d3c08021615201a1a",
+  "pulledAt": "2026-07-10T18:49:49Z",
+  "contentHash": "453df5334913a4d2f57578c75b54d3b4912615be0b422cb1386b3ff85732cd79"
 }
