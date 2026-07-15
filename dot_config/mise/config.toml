@@ -1,8 +1,8 @@
 [tools]
 "pipx:jc" = "1.25.7"
-claude = "2.1.207"
+claude = "2.1.209"
 ctop = "0.7.7"
-flux2 = "2.9.1"
+flux2 = "2.9.2"
 fzf = "0.74.0"
 gh = "2.96.0"
 go = "1.26.5"
@@ -22,7 +22,7 @@ rtk = "0.43.0"
 rust = "1.97.0"
 terraform = "1.15.8"
 terragrunt = "1.1.0"
-tree-sitter = "0.26.10"
+tree-sitter = "0.26.11"
 uv = "0.11.28"
 
 [settings]
