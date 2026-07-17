@@ -23,11 +23,7 @@ function zrcautoload () {
     done
 
     (( ffound == 0 )) && return 1
-    if [[ $ZSH_VERSION == 3.1.<6-> || $ZSH_VERSION == <4->* ]] ; then
-        autoload -U ${ffile} || return 1
-    else
-        autoload ${ffile} || return 1
-    fi
+    autoload -U ${ffile} || return 1
     return 0
 }
 
@@ -518,10 +514,6 @@ __EOF0__
 function grml_prompt_setup () {
     emulate -L zsh
     autoload -Uz vcs_info
-    # The following autoload is disabled for now, since this setup includes a
-    # static version of the ‘add-zsh-hook’ function above. It needs to be
-    # re-enabled as soon as that static definition is removed again.
-    #autoload -Uz add-zsh-hook
     add-zsh-hook precmd prompt_$1_precmd
 }
 
@@ -955,21 +947,11 @@ function grml_vcs_to_screen_title () {
     fi
 }
 
-function grml_maintain_name () {
-    local localname
-    localname="$(uname -n)"
-
-    # set hostname if not running on local machine
-    if [[ -n "$HOSTNAME" ]] && [[ "$HOSTNAME" != "${localname}" ]] ; then
-       NAME="@$HOSTNAME"
-    fi
-}
-
 function grml_cmd_to_screen_title () {
-    # get the name of the program currently running and hostname of local
-    # machine set screen window title if running in a screen
+    # get the name of the currently running program to set screen window title
+    # if running in a screen.
     if [[ "$TERM" == screen* ]] ; then
-        local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}$NAME"
+        local CMD="${1[(wr)^(*=*|sudo|ssh|-*)]}"
         ESC_print ${CMD}
     fi
 }
@@ -989,7 +971,6 @@ function grml_control_xterm_title () {
 if [[ $NOPRECMD -eq 0 ]]; then
     add-zsh-hook precmd grml_reset_screen_title
     add-zsh-hook precmd grml_vcs_to_screen_title
-    add-zsh-hook preexec grml_maintain_name
     add-zsh-hook preexec grml_cmd_to_screen_title
     if [[ $NOTITLE -eq 0 ]]; then
         add-zsh-hook preexec grml_control_xterm_title
