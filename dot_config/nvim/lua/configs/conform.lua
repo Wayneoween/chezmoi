@@ -8,7 +8,7 @@ local opts = {
     css = { "prettier" },
     hcl = { "terragrunt_hclfmt" },
     html = { "prettier" },
-    json = { "jsonls" },
+    json = { "prettier" },
     lua = { "stylua" },
     python = { "ruff_format" },
     sh = { "shfmt" },
@@ -28,10 +28,6 @@ local opts = {
     if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
       return
     end
-    local disable_filetypes = {
-      json = false,
-      dockerfile = true,
-    }
     return {
       timeout_ms = 500,
       lsp_fallback = false,

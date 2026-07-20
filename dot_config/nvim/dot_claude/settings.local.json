@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rtk ls *)",
+      "Bash(droast --version)",
+      "Bash(rtk find *)",
+      "Read(//Users/marius/.local/**)",
+      "Bash(rtk read *)",
+      "Read(//Users/marius/code/wildfireservice/**)",
+      "Bash(droast datasource/Dockerfile)",
+      "Bash(echo \"=== EXIT: $? ===\")",
+      "Bash(droast --format json --no-roast --no-fail --check-dockerignore=false datasource/Dockerfile)",
+      "Bash(python3 -c 'import sys,json; d=json.load\\(sys.stdin\\); print\\(len\\(d.get\\(\"findings\",[]\\)\\), \"findings\"\\); [print\\(f.get\\(\"severity\"\\),f.get\\(\"rule\"\\),f.get\\(\"line\"\\),f.get\\(\"message\"\\)[:50]\\) for f in d.get\\(\"findings\",[]\\)]')",
+      "Bash(echo \"=== exit $? ===\")",
+      "Bash(rtk grep *)",
+      "Bash(nvim --version)",
+      "Bash(/Users/marius/.local/share/nvim/mason/bin/yamllint --version)",
+      "Bash(echo \"exit=$?\")",
+      "Bash(/Users/marius/.local/share/nvim/mason/bin/markdownlint --version)"
+    ]
+  }
+}

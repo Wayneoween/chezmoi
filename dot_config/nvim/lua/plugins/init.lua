@@ -108,7 +108,26 @@ return {
   ---------------------------------------------------------------------------
   -- Linting ---------------------------------------------------------------
   ---------------------------------------------------------------------------
-  { "mfussenegger/nvim-lint" },
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufReadPost", "BufWritePost", "InsertLeave" },
+    config = function()
+      local lint = require "lint"
+      -- nvim-lint splits compound filetypes on ".", so `yaml` also covers
+      -- yaml.ansible / yaml.docker-compose / yaml.gitlab / yaml.openapi.
+      lint.linters_by_ft = {
+        markdown = { "markdownlint" },
+        yaml = { "yamllint" },
+      }
+      local group = vim.api.nvim_create_augroup("nvim-lint", { clear = true })
+      vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "InsertLeave" }, {
+        group = group,
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+    end,
+  },
 
   ---------------------------------------------------------------------------
   -- Treesitter & related --------------------------------------------------
@@ -148,8 +167,7 @@ return {
           local ft = vim.bo[ev.buf].filetype
           local lang = vim.treesitter.language.get_lang(ft)
           if lang and pcall(vim.treesitter.start, ev.buf, lang) then
-            vim.bo[ev.buf].indentexpr =
-              "v:lua.require'nvim-treesitter'.indentexpr()"
+            vim.bo[ev.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
           end
         end,
       })
@@ -295,6 +313,23 @@ return {
     ft = "markdown",
     lazy = true,
     dependencies = { "nvim-lua/plenary.nvim" },
+  },
+  ---------------------------------------------------------------------------
+  -- Dockerfile -------------------------------------------------------------
+  ---------------------------------------------------------------------------
+  {
+    "immanuwell/droast.nvim",
+    ft = { "dockerfile" },
+    config = function()
+      require("droast").setup() -- :Droast* commands + on-save lint
+      require("droast").lint(0) -- lint the Dockerfile that just loaded it
+      vim.api.nvim_create_autocmd("BufReadPost", {
+        pattern = { "Dockerfile", "Dockerfile.*", "*.Dockerfile", "Containerfile", "Containerfile.*" },
+        callback = function(a)
+          require("droast").lint(a.buf)
+        end,
+      })
+    end,
   },
   ---------------------------------------------------------------------------
   -- Git integrations ------------------------------------------------------
