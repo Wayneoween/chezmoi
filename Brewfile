@@ -1,8 +1,10 @@
 tap "alesbrelih/gitlab-ci-ls"
 tap "charmbracelet/tap", trusted: true
 tap "derailed/popeye"
+tap "fencesandbox/tap"
 tap "hashicorp/tap", trusted: true
 tap "hedhyw/main"
+tap "immanuwell/droast", "https://github.com/immanuwell/homebrew-droast.git"
 tap "janosmiko/tap"
 tap "mm7894215/tokentracker", trusted: { formulae: ["tokentracker"] }
 tap "secureauthcorp/tap", "https://github.com/SecureAuthCorp/homebrew-tap.git", trusted: true
@@ -352,10 +354,14 @@ brew "zoxide"
 brew "alesbrelih/gitlab-ci-ls/gitlab-ci-ls", trusted: true
 # A Kubernetes Cluster sanitizer and linter!
 brew "derailed/popeye/popeye", trusted: true
+# Lightweight, container-free sandbox for running commands with network and filesystem restrictions
+brew "fencesandbox/tap/fence", trusted: true
 # Packer
 brew "hashicorp/tap/packer"
 # JSON Log Viewer tool.
 brew "hedhyw/main/jlv", trusted: true
+# Dockerfile linter with personality
+brew "immanuwell/droast/droast", trusted: true
 # Lightning Fast Kubernetes navigator - keyboard-focused TUI for managing K8s clusters
 brew "janosmiko/tap/lfk", trusted: true
 # Modern Kubernetes visibility — topology, traffic, and Helm management
