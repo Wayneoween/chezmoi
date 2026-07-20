@@ -41,7 +41,7 @@
           {
             "name": "tokentracker",
             "type": "command",
-            "command": "/usr/bin/env node ~/.tokentracker/bin/notify.cjs --source=gemini"
+            "command": "/usr/bin/env node /Users/marius/.tokentracker/bin/notify.cjs --source=gemini"
           }
         ],
         "matcher": "exit|clear|logout|prompt_input_exit|other"
