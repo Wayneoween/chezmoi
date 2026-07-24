@@ -12,8 +12,9 @@ clean_branches() {
     git fetch -p
 
     # 2. Identify: Find local branches where the upstream is marked [gone]
-    # git branch -vv shows upstream status like [origin/branch: gone]
-    local branches_to_delete=$(git branch -vv | grep ': gone]' | awk '{print $1}')
+    # Use --format so we get the bare branch name, not the '*'/'+' marker
+    # column that `git branch -vv` prints for the current/worktree branches.
+    local branches_to_delete=$(git branch --format='%(refname:short) %(upstream:track)' | awk '$2 == "[gone]" {print $1}')
 
     if [[ -z "$branches_to_delete" ]]; then
         echo "No 'gone' branches found. (Are your remote branches deleted?)"
