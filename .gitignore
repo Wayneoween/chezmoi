@@ -15,18 +15,20 @@ code/
 # allowlisted below so they survive a fresh bootstrap.
 dot_agents/skills/*
 dot_agents/dot_skill-lock.json
-dot_agents/skills/avoid-ai-writing/
 !dot_agents/skills/anti-ai-writing-style/
-!dot_agents/skills/caveman/
+!dot_agents/skills/avoid-ai-writing/
+!dot_agents/skills/codebase-design/
+!dot_agents/skills/domain-modeling/
 !dot_agents/skills/git-commit/
-!dot_agents/skills/grill-me/
 !dot_agents/skills/grill-with-docs/
+!dot_agents/skills/grilling/
 !dot_agents/skills/handoff/
 !dot_agents/skills/improve-codebase-architecture/
 !dot_agents/skills/karpathy-guidelines/
-!dot_agents/skills/ponytail/
 !dot_agents/skills/ponytail-audit/
 !dot_agents/skills/ponytail-debt/
 !dot_agents/skills/ponytail-review/
+!dot_agents/skills/ponytail/
 !dot_agents/skills/prepare-rotss/
 !dot_agents/skills/thermo-nuclear-code-quality-review/
+!dot_agents/skills/to-spec/
