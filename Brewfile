@@ -162,6 +162,8 @@ brew "pkgconf"
 brew "headscale-cli"
 # Kubernetes package manager
 brew "helm"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
 # Command-line hex viewer
 brew "hexyl"
 # <hr />, for your terminal window
@@ -386,8 +388,6 @@ cask "chatgpt"
 cask "chipmunk"
 # Anthropic's official Claude AI desktop app
 cask "claude"
-# Ghostty-based terminal with vertical tabs and notifications for AI coding agents
-cask "cmux"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
 # Server and cloud storage browser
