@@ -6,10 +6,10 @@ tap "hashicorp/tap", trusted: true
 tap "hedhyw/main"
 tap "immanuwell/droast", "https://github.com/immanuwell/homebrew-droast.git"
 tap "janosmiko/tap"
-tap "mm7894215/tokentracker", trusted: { formulae: ["tokentracker"] }
 tap "secureauthcorp/tap", "https://github.com/SecureAuthCorp/homebrew-tap.git", trusted: true
 tap "skyhook-io/tap"
 tap "vitorgalvao/tiny-scripts"
+tap "xiufengsun/tokentracker", "https://github.com/xiufengsun/homebrew-tokentracker.git", trusted: true
 # Run your GitHub Actions locally
 brew "act"
 # Simple, modern, secure file encryption
@@ -436,8 +436,6 @@ cask "monitorcontrol"
 cask "obsidian"
 # Professional webcam software for the Opal C1
 cask "opal-composer"
-# AI coding agent desktop client
-cask "opencode-desktop"
 # Client program for the OpenVPN Access Server
 cask "openvpn-connect"
 # Workspace simplifier - to organize your workspace and boost your productivity
@@ -455,7 +453,7 @@ cask "steam"
 # Customizable email client
 cask "thunderbird"
 # Local-first AI token usage tracker menu bar app
-cask "mm7894215/tokentracker/tokentracker", trusted: true
+cask "xiufengsun/tokentracker/tokentracker"
 # Open-source code editor
 cask "visual-studio-code"
 # Multimedia player
