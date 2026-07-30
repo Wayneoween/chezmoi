@@ -4,6 +4,58 @@ All notable changes to this project are documented here.
 
 ---
 
+## [3.20.0] — 2026-07-29
+
+### Added
+
+One rule with detector coverage, found while drafting a podcast teaser post. Catalog goes from 59 to 60 detection categories; the engine goes from 45 to 46 `type`s.
+
+- **Lingering-attention claims** (`lingering-attention`) — the share-post frame that claims a thing has occupied the writer's mind rather than saying anything about the thing: `"the line I keep coming back to"`, `"I can't stop thinking about this"`, `"still thinking about this one"`, `"rattling around in my head all week"`, `"I've been chewing on this"`. Sits next to **emotional flatline** in the catalog but is a separate claim: flatline claims a *feeling* ("What surprised me most"), this claims *duration* of attention, which is unfalsifiable and self-flattering in a way a feeling isn't. It also opens a share post where **social endorsement closers** close one. Added to the P1 severity tier.
+- **Precision carve-out.** The bare verb phrase `"I keep coming back to X"` deliberately does *not* fire, because it is legitimate whenever a reason follows ("I keep coming back to the exit-voice framing because it predicts which engineers quit"), and the reason clause is not reliably regex-detectable. Only the noun-anchored frame (`the line/quote/bit/idea ... I keep coming back to`) is matched — the shape that introduces a subject instead of asserting something about it. The bare form stays an LLM-judgment call in the skill prose. Fixtures cover both directions, including the must-not-fire case.
+
+---
+
+## [3.19.0] — 2026-07-24
+
+### Added
+
+Two judgment-only rules (no detector `type`) found during a real audit. Catalog goes from 57 to 59 detection categories.
+
+- **Moral-adjective category errors** — AI glues moral adjectives (`honest`, `genuine`, `faithful`) onto non-agentic technical nouns (`shape`, `number`, `representation`) where the modifier cannot literally apply. Also covers passive-voice moral adverbs (`"described honestly"`), ontological slop on assumptions (`"stops being true"`), and gratuitous universal quantifiers (`"every first-year course"`).
+- **Invented contrast-pair mirroring** — AI fabricates the second half of a contrast pair for symmetry (`"false precision rather than genuine accuracy"`, where the first term is real and the second is phantom).
+- Both added to the P1 severity tier and the tolerance matrix (relaxed for `technical-blog` and `docs` profiles).
+
+---
+
+## [3.18.0] — 2026-07-22
+
+### Changed
+- **Em dashes** — carve-out for the definition-list separator position: an em dash after a bolded lead term or a markdown link opening a bulleted or numbered list item (`- **Term** — description`, `- [label](url) — description`) is typography, not a prose splice, and no longer counts toward the 1-per-1,000-words rate. The detector's exclusion requires the list marker — a line-initial `**Bold lead** — full sentence` outside a list is itself an AI tell and still counts, as do mid-sentence splices; the `--` substitute is never carved out. The same separator dashes no longer corroborate the `smart-punct-signature` co-occurrence check either — its em-dash leg now requires a non-separator dash. Fixtures added for all the boundaries: bulleted and numbered definition lists stay clean, markerless bold-lead splices and flowing-prose splices still fire, and a curly-quoted definition list with separator-only dashes no longer completes the smart-punct signature. This repo's own README and changelog use the separator convention throughout, which is what the strict-context false positive looks like in practice. (The same carve-out was independently proposed upstream in `blader/humanizer` PR #190.)
+
+---
+
+## [3.17.0] — 2026-07-20
+
+### Added
+
+Four categories harvested from [`blader/humanizer`](https://github.com/blader/humanizer) v2.8.2, the residue of a full cross-audit against its 33-pattern catalog (most were already covered here, several via earlier adaptations). Catalog goes from 53 to 57 detection categories. All four are LLM-judgment rules (no detector `type`): each needs reading for meaning, and the obvious regexes fail the precision-over-recall bar — "X is the Y of Z" matches "Paris is the capital of France."
+
+- **Subjectless fragments and agentless passives** — "No configuration file needed," plus the actor-hiding passive ("Support for nested queries was added"). Docs and changelog registers carved out — the fragment is the correct form there — plus a tolerance-matrix row so `docs`/`casual` skip it entirely. Adapted from `blader/humanizer` P13.
+- **Diff-anchored writing** — docs narrating the edit instead of the artifact ("This function was added to replace..."). Version-scoped documents (changelogs, release notes, migration guides, decision records) carved out. Adapted from `blader/humanizer` P30.
+- **Manufactured punchlines and staccato drama** — three or more same-shape reveal-fragments in a row. Reconciled with Rhythm and uniformity: one emphatic fragment is human variation, the drumroll is the tell. Adapted from `blader/humanizer` P31.
+- **Aphorism formulas** — "X is the language of Y." Quotations and established idioms carved out. Adapted from `blader/humanizer` P32.
+
+### Changed
+- **"It's not X — it's Y"** — extended with the **tailing negation**, the clipped fragment form of the same contrastive move ("The options come from the selected item, no guessing"). Spec-constraint lists ("no dependencies, no telemetry") stay clean. Adapted from `blader/humanizer` P9.
+- **Excessive structure** — extended with **fragmented headers**: a heading followed by a one-line warm-up that restates it ("## Performance", then "Speed matters."). Adapted from `blader/humanizer` P29.
+- **Infomercial engagement hooks** — extended with **fake-candid openers**: "Honestly?", "Look,", "Real talk:" as standalone pause-and-reveal stagers; mid-sentence "honestly" or "look" is ordinary English and stays unflagged. Adapted from `blader/humanizer` P33.
+- **Tone calibration** — gains a put-voice-back note adapted from humanizer's "Personality and soul" section: a rewrite that clears every flag but reads sterile is still recognizably machine output; when the genre carries a voice, re-inject one deliberately, and leave neutral registers neutral.
+
+### Source
+- Cross-audit run 2026-07-20 against `blader/humanizer` v2.8.2, which grounds its catalog in [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup). Earlier releases had already absorbed P21, P26, and P27 directly, and P34/P35/P38/P41/P43 via `Aboudjem/humanizer-skill`; these additions are the remaining gaps that survived a false-positive review.
+
+---
+
 ## [3.16.0] — 2026-07-15
 
 ### Added

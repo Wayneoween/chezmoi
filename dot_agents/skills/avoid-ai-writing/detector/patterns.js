@@ -230,6 +230,11 @@ const AIDetector = (() => {
     'exceptional', 'exceptionally', 'remarkable', 'remarkably',
     'sophisticated', 'instrumental',
     'world-class', 'state-of-the-art', 'best-in-class',
+    // `verbatim` is usually redundant with the verb it modifies ("copies X
+    // verbatim" = "copies X"). It has a genuine term-of-art sense in legal,
+    // research, and QA registers ("verbatim transcript"), so it lives at Tier 3:
+    // density-gated, it only fires on overuse, not on a single legitimate use.
+    'verbatim',
   ];
 
   // Multi-word Tier 3 phrases. Density-gated like single Tier 3 words because
@@ -281,6 +286,7 @@ const AIDetector = (() => {
     'vague-attribution': 5,
     'hollow-intensifier': 2,
     'emotional-flatline': 2,
+    'lingering-attention': 3,
     'novelty-inflation': 3,
     'cutoff-disclaimer': 10,
     'template-phrase': 3,
@@ -456,6 +462,30 @@ const AIDetector = (() => {
     // `(?:^|\n)` form silently missed bare openers at the very start of
     // input — caught by silent-failure audit 2026-05-16.
     /^\s*interesting\s+(?:part|thing|aspect|piece)(?:\s+of\s+(?:the\s+)?\w+)?\s*:/gim,
+  ];
+
+  // ─── Lingering-attention claims ────────────────────────────────────
+  // The share-post opener that claims duration of attention instead of
+  // saying anything about the thing ("the line I keep coming back to").
+  //
+  // Precision note: the bare verb phrase "I keep coming back to X" is NOT
+  // matched on its own, because it is legitimate whenever a reason follows
+  // ("I keep coming back to Hirschman because it predicts who quits"), and
+  // the reason clause is not reliably detectable by regex. Only the
+  // noun-anchored frame ("the line/quote/bit ... I keep coming back to")
+  // fires, which is the shape that introduces a subject rather than
+  // asserting something about it. The bare form stays a skill-prose
+  // judgment call. See SKILL.md §Lingering-attention claims carve-out.
+  const LINGERING_ATTENTION = [
+    // "the line I keep coming back to", "the one quote that I keep coming back to"
+    // Noun-anchored frame only. "can't stop thinking about" is deliberately
+    // left to its own pattern below rather than folded into this alternation,
+    // so "the line I can't stop thinking about" scores once, not twice.
+    /\b(?:the|that|this)\s+(?:one\s+)?(?:line|quote|bit|part|idea|point|framing|comment|thing)\s+(?:that\s+)?i\s+keep\s+(?:coming\s+back\s+to|thinking\s+about)\b/gi,
+    /\bi\s+can'?t\s+stop\s+thinking\s+about\b/gi,
+    /\bstill\s+thinking\s+about\s+(?:this|that)\s+one\b/gi,
+    /\b(?:been|be)\s+rattling\s+around\s+(?:in\s+)?my\s+(?:head|brain)\b/gi,
+    /\bi'?ve\s+been\s+chewing\s+on\s+(?:this|that)\b/gi,
   ];
 
   // ─── Novelty inflation ─────────────────────────────────────────────
@@ -905,6 +935,7 @@ const AIDetector = (() => {
     issues.push(...matchPatterns(text, VAGUE_ATTRIBUTIONS, 'vague-attribution', 'critical'));
     issues.push(...matchPatterns(text, HOLLOW_INTENSIFIERS, 'hollow-intensifier', 'medium'));
     issues.push(...matchPatterns(text, EMOTIONAL_FLATLINE, 'emotional-flatline', 'low'));
+    issues.push(...matchPatterns(text, LINGERING_ATTENTION, 'lingering-attention', 'medium'));
     issues.push(...matchPatterns(text, NOVELTY_INFLATION, 'novelty-inflation', 'medium'));
     issues.push(...matchPatterns(text, CUTOFF_DISCLAIMERS, 'cutoff-disclaimer', 'critical'));
     issues.push(...matchPatterns(text, AI_PLACEHOLDERS, 'ai-placeholder', 'critical'));
@@ -959,15 +990,25 @@ const AIDetector = (() => {
       });
     }
 
+    // Em dashes in list-item separator position — a bulleted or numbered
+    // list item opening with a bolded lead term or markdown link, then the
+    // dash ("- **Term** — desc", "- [label](url) — desc") — are
+    // definition-list typography, not prose punctuation. Shared by the
+    // smart-punct signature below and the em-dash frequency check (§22).
+    const SEPARATOR_DASH_RE = /^\s*(?:[-*+]|\d+[.)])\s+(?:\*\*[^*\n]+\*\*|\[[^\]\n]+\]\([^)\n]*\))[ \t]*—/gm;
+
     // ── Smart-punctuation co-occurrence signature ────────────────────
     // Curly quotes + em-dash + Oxford comma all present + zero typos
     // (no double-spaces, no missing apostrophes in common contractions)
     // is a near-dispositive paste-from-LLM signature: humans typing
     // directly into a textarea don't produce all four. Standalone any of
-    // these is meaningless — co-occurrence is the signal.
+    // these is meaningless — co-occurrence is the signal. Separator-position
+    // dashes are typography and don't corroborate it.
     {
       const hasCurly = /[“”‘’]/.test(text);
-      const hasEmDash = /—/.test(text);
+      const totalEmDashes = (text.match(/—/g) || []).length;
+      const separatorEmDashes = (text.match(SEPARATOR_DASH_RE) || []).length;
+      const hasEmDash = totalEmDashes > separatorEmDashes;
       const oxfordHit = text.match(/\b\w+,\s+\w+,\s+and\s+\w+/g);
       const hasOxford = (oxfordHit?.length || 0) >= 1;
       const doubleSpaces = (text.match(/[^.!?]  +/g) || []).length;
@@ -1271,7 +1312,14 @@ const AIDetector = (() => {
     // ── 22. Em dash frequency ────────────────────────────────────
     // Match real em dashes, plus `--` only when surrounded by whitespace on at
     // least one side (skips CLI flags like --save-dev and YAML `---` blocks).
-    const emDashCount = (text.match(/—|(?<=\s)--(?=\s|$)|(?<=^|\s)--(?=\s)/gm) || []).length;
+    // Separator-position em dashes (SEPARATOR_DASH_RE above) are excluded
+    // from the rate. The list marker is required on purpose: a line-initial
+    // "**Bold lead** — full sentence" outside a list is itself an AI tell
+    // and still counts, as does a mid-sentence "**bold** — like this"
+    // splice. Em dash only — the `--` substitute is never carved out.
+    const rawEmDashCount = (text.match(/—|(?<=\s)--(?=\s|$)|(?<=^|\s)--(?=\s)/gm) || []).length;
+    const separatorDashCount = (text.match(SEPARATOR_DASH_RE) || []).length;
+    const emDashCount = rawEmDashCount - separatorDashCount;
     const emDashRate = emDashCount / (wordCount / 1000);
     if (emDashRate > 1) {
       issues.push({
@@ -1690,6 +1738,7 @@ const AIDetector = (() => {
     'vague-attribution': 'Vague attribution',
     'hollow-intensifier': 'Hollow intensifier',
     'emotional-flatline': 'Emotional flatline',
+    'lingering-attention': 'Lingering-attention claim',
     'novelty-inflation': 'Novelty inflation',
     'cutoff-disclaimer': 'Cutoff disclaimer',
     'template-phrase': 'Template phrase',
