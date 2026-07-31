@@ -112,8 +112,6 @@ brew "gawk"
 brew "gcc"
 # Geometry Engine
 brew "geos"
-# GitHub command-line tool
-brew "gh"
 # Distributed revision control system
 brew "git"
 # Quickly rewrite git repository history
