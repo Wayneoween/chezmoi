@@ -8,6 +8,7 @@ dot_DS_Store
 # Local-only: internal infra scaffolding, kept on disk but never committed here.
 code/
 
+dot_agents/plans/*
 # Skills are installed by `npx skills` into ~/.agents/skills and recorded in the
 # lockfile. Don't commit vendored content or the lockfile — re-add them on a new
 # device with `npx skills`. Keeps future internal/private skills out of the repo
