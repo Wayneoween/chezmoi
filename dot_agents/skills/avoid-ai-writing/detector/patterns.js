@@ -1,6 +1,6 @@
 /**
  * Avoid AI Writing — detection engine (canonical source of truth)
- * Implements 45-category pattern detection. This repo's SKILL.md
+ * Implements regex, structural, and stylometric pattern detection. This repo's SKILL.md
  * catalogs the human-editable pattern rules; this engine is the executable
  * expression of the regex-detectable subset and extends it with stylometric and
  * AI-tool-fingerprint detectors that don't make sense as skill prose
@@ -651,12 +651,122 @@ const AIDetector = (() => {
     /\b(?:imagine|picture|envision)(?:\s*,[^,\n]{1,30},)?\s+a\s+(?:world|future|reality)\s+(?:where|in\s+which)\b/gi,
   ];
 
+  // Function words whose presence MID-title marks the AI section-header shape.
+  // Word-anchored: without \b the "A" alternative matches inside any word and
+  // the guard silently degrades to "four tokens".
+  const FUNCTION_WORD = /\b(?:And|Or|Of|The|In|For|To|A|An)\b/;
+
+  // Must accept exactly what TITLE_CASE_HEADER accepts, or the prefix survives
+  // into the token count and reintroduces the ##-as-token bug.
+  const MD_HEADING_PREFIX = /^#{1,6}[ \t]+/;
+
+  /** Byte ranges covered by fenced code blocks, computed once per scan.
+   *
+   * A document that documents Markdown is the normal case for this rule -- a
+   * fenced `## Heading` example is illustration, not the author's own section
+   * header, and flagging it makes every docs page flag itself.
+   *
+   * This tracks the opening delimiter instead of counting them, because a
+   * parity count is wrong on the very case the rule exists for. CommonMark
+   * closes a fence only on the same character at the same length or longer, so
+   * a four-backtick fence wrapping a three-backtick example -- exactly how you
+   * document fences -- nests in practice, and counting delimiters inverts on
+   * it. Up to three spaces of indent are legal. An unclosed fence runs to end
+   * of document, matching how renderers treat it.
+   *
+   * Computed once per scan rather than rescanned per hit: the previous version
+   * sliced the whole document for every candidate, which is quadratic on a
+   * heading-dense file. */
+  function fenceRanges(text) {
+    const re = /^[ \t]{0,3}(`{3,}|~{3,})[^\n]*$/gm;
+    const ranges = [];
+    let open = null;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const marker = m[1];
+      if (!open) {
+        open = { char: marker[0], len: marker.length, start: m.index };
+      } else if (marker[0] === open.char && marker.length >= open.len) {
+        ranges.push([open.start, m.index + m[0].length]);
+        open = null;
+      }
+    }
+    if (open) ranges.push([open.start, text.length]);
+
+    return ranges;
+  }
+
+  function inFenceRange(ranges, index) {
+    return typeof index === 'number' && ranges.some(([a, b]) => index >= a && index < b);
+  }
+
+  // Copy of the text with fenced blocks and inline code spans blanked out.
+  // Index-preserving: each masked character becomes a space and newlines are
+  // kept, so offsets into the result still address the same position in the
+  // original. For rules where a character inside code is something the author
+  // is quoting rather than using — a `#fff` in a CSS sample is not a tag.
+  // Fences are blanked first so their backticks cannot pair with a later
+  // inline span and swallow the prose between them.
+  function maskCode(text) {
+    const chars = text.split('');
+    const blank = (a, b) => {
+      for (let i = a; i < b && i < chars.length; i += 1) {
+        if (chars[i] !== '\n') chars[i] = ' ';
+      }
+    };
+    for (const [a, b] of fenceRanges(text)) blank(a, b);
+    // Indented code blocks are deliberately NOT masked. Four spaces is a code
+    // block only at top level; under a list marker it is a paragraph
+    // continuation, so blanking it silences real tag blocks. #90 reports
+    // fences and inline spans, and those are what this masks.
+    const withoutFences = chars.join('');
+    const inlineRe = /(`+)(?:(?!\1)[^\n])+\1/g;
+    let m;
+    while ((m = inlineRe.exec(withoutFences)) !== null) blank(m.index, m.index + m[0].length);
+    return chars.join('');
+  }
+
+  // ─── Forms that open with `#` but are not social tags ──────────────
+  // `#` is overloaded in technical prose and the hashtag rule counts every
+  // `#word` it sees, so these are subtracted before the threshold applies:
+  //   #88, #1234         issue and PR references
+  //   #1a2b3c            CSS hex colours, 6 or 8 chars AND containing a digit
+  //   #include, #ifndef  C preprocessor directives
+  // Deliberately NOT carving out 3- and 4-digit hex: #dad, #cafe, #b2b, #e2e,
+  // #ace, #face and #bad are real tags, and subtracting them cost true
+  // positives on exactly the stuffed-block shape this rule exists to catch.
+  // Real palettes are dominated by 6-digit values, so a CSS paragraph still
+  // lands under the threshold without the short forms.
+  // `owner/repo#88` and URL fragments need no carve-out: the char before `#`
+  // is a word char, so the rule's own anchor already rejects them.
+  // Ambiguous word tags stay counted on purpose. `#general` as a channel and
+  // `#general` as a tag are the same token, and separating them needs a guess
+  // that costs more precision on real tag blocks than the carve-out buys.
+  // Requires at least one digit: #decade, #facade, #deadbeef are a-f words and
+  // real tags. Every actual palette value in the wild carries a digit.
+  const HEX_COLOUR = /^(?=[0-9a-f]*\d)(?:[0-9a-f]{6}|[0-9a-f]{8})$/i;
+  const CPP_DIRECTIVE = /^(?:include|define|undef|if|ifdef|ifndef|elif|else|endif|pragma|error|warning|line)$/;
+
+  function isSocialTag(tag) {
+    return !/^\d+$/.test(tag) && !HEX_COLOUR.test(tag) && !CPP_DIRECTIVE.test(tag);
+  }
+
   // ─── Title Case Section Headers in non-technical prose ─────────────
   // "Strategic Negotiations And Key Partnerships" — every content word
   // capitalized. Acceptable in API docs, ML papers, news headlines. Tell
   // in marketing/personal/blog prose. Gated to "personal" / "marketing"
   // context modes (technical mode skips this check).
-  const TITLE_CASE_HEADER = /^([A-Z][a-z]+(?:\s+(?:[A-Z][a-z]+|and|or|of|the|in|for|to|a|an))+\s+[A-Z][a-z]+)\s*$/gm;
+  //
+  // The optional `#{1,6}` prefix is load-bearing (#62): without it the `^[A-Z]`
+  // anchor required the line to START with a capital, so `## Benefits And
+  // Strategic Considerations` never matched — the first character is `#`. The
+  // rule missed the single most common way a heading is actually written, while
+  // catching the bare-line form it is usually converted from. Reported by a
+  // downstream vendoring the detector.
+  //
+  // Setext headings (`Title`/`=====`) need no prefix: their text line is bare
+  // and already matched by this same pattern.
+  const TITLE_CASE_HEADER = /^(?:#{1,6}[ \t]+)?([A-Z][a-z]+(?:\s+(?:[A-Z][a-z]+|and|or|of|the|in|for|to|a|an))+\s+[A-Z][a-z]+)\s*$/gm;
 
   // ─── Parenthetical hedging asides ──────────────────────────────────
   // "(and increasingly, X)", "(or more precisely, Y)", "(though to be
@@ -971,11 +1081,34 @@ const AIDetector = (() => {
       // Drop matches that look like proper-noun titles (single line, all
       // tokens capitalized incl. function words) — that's headline style,
       // not the AI-section-header tell which has mid-sentence "And".
+      //
+      // The prefix strip is load-bearing. matchPatterns reports match[0], so a
+      // Markdown hit arrives as "## Terms Of Service" and `##` counts as a
+      // token — silently lowering this guard from four content words to three
+      // for headings only, which is exactly the class it exists to protect.
+      // "## Terms Of Service", "## Bank Of America" and "## Table Of Contents"
+      // all flagged as a result: ordinary human headings, on a detector whose
+      // stated first priority is not firing on human writing.
       const filtered = titleHits.filter((h) => {
-        const tokens = h.text.split(/\s+/);
-        return tokens.length >= 4 && /\b(?:And|Or|Of|The|In|For|To|A|An)\b/.test(h.text);
+        const title = h.text.replace(MD_HEADING_PREFIX, '');
+        const tokens = title.trim().split(/\s+/);
+        if (tokens.length < 4) return false;
+
+        // The function word must be MID-title, which is what the comment above
+        // has always said and what the test never enforced. A leading "The"
+        // satisfied a bare /\bThe\b/, so ordinary human headings flagged:
+        // "## The New Security Landscape", "## The Microsoft Approach to
+        // Identity", "### The Four Keys to a Successful and Secure Modern
+        // Workplace". Measured across 81 files that provably predate LLMs
+        // (2018-19 eBooks, 2020 posts): 13 false positives, every one opening
+        // with "The", against zero on main.
+        //
+        // "## Benefits And Strategic Considerations" -- the actual tell, and
+        // this rule's own fixture -- is untouched: its "And" is interior.
+        return FUNCTION_WORD.test(tokens.slice(1).join(' '));
       });
-      issues.push(...filtered);
+      const fences = filtered.length ? fenceRanges(text) : [];
+      issues.push(...filtered.filter((h) => !inFenceRange(fences, h.index)));
     }
 
     // ── Normalization-trigger flag ───────────────────────────────────
@@ -1235,7 +1368,11 @@ const AIDetector = (() => {
     // Earlier char class `[\s\\]` had a literal backslash and silently
     // missed hashtags after sentence punctuation; an interim `[\s]` fix
     // on origin only caught whitespace-preceded tags.
-    const hashtagMatches = text.match(/(?:^|\W)#\w[\w-]*/g) || [];
+    // Code is masked and non-tag `#` forms are subtracted first — see maskCode
+    // and isSocialTag. Without them a changelog paragraph citing six issue
+    // numbers, or a palette listing six hex colours, scored as a tag block.
+    const hashtagMatches = [...maskCode(text).matchAll(/(?:^|\W)#(\w[\w-]*)/g)]
+      .filter((m) => isSocialTag(m[1]));
     if (hashtagMatches.length >= 6) {
       issues.push({
         type: 'hashtag-stuff',

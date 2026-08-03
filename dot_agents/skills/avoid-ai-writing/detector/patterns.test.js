@@ -525,6 +525,82 @@ test('hashtag-stuff excludes URL fragments from the count', () => {
   assert.ok(!types.has('hashtag-stuff'), 'URL fragments should not count as hashtags');
 });
 
+test('hashtag-stuff excludes issue and PR references from the count', () => {
+  // `#88` in prose is a GitHub issue reference, not a tag. A changelog
+  // paragraph routinely cites six of them, and every such paragraph scored
+  // as a stuffed hashtag block. Found when this repo's own README linked an
+  // issue and the detector flagged the README.
+  const text = 'The regression came in through #88 and stayed hidden until #91 landed. I reverted #92, reopened #93, and then #94 turned out to be the same bug in a different file. #95 is the follow up that fixes it, and #96 tracks the test we still owe.';
+  const types = new Set(AIDetector.analyzeText(text).issues.map((i) => i.type));
+  assert.ok(!types.has('hashtag-stuff'), 'issue references should not count as hashtags');
+});
+
+test('hashtag-stuff excludes hex colours and preprocessor directives', () => {
+  // `#fff` is a colour and `#include` is a directive. Both appear in
+  // technical prose well past six per post.
+  const css = 'Background is #fff in light mode and #eee in dark. Body text sits at #1a2b3c, muted text at #6b7280, the link colour is #2563eb, hover is #1d4ed8, and the one accent is #f59e0b on the button.';
+  // 8-character RGBA values, so dropping the {8} alternative is caught.
+  const rgba = 'Palette is #1a2b3cff for body and #6b7280ee muted and #2563ebdd links and #1d4ed8cc hover and #f59e0bbb accent and #0a1b2cdd border today.';
+  const c = 'Put #include <stdio.h> first, then #include <stdlib.h>, then #include <string.h>. Add #include <unistd.h> and #include <fcntl.h> after those, and guard the block with #ifndef and #endif so it stays idempotent.';
+  for (const [label, text] of [['hex colours', css], ['rgba colours', rgba], ['directives', c]]) {
+    const types = new Set(AIDetector.analyzeText(text).issues.map((i) => i.type));
+    assert.ok(!types.has('hashtag-stuff'), `${label} should not count as hashtags`);
+  }
+});
+
+test('hashtag-stuff ignores hashes inside code spans and fences', () => {
+  // A tag in backticks is the author documenting the syntax, not using it.
+  // Every span here is a tag isSocialTag would otherwise KEEP, so the count is
+  // 6 without masking and 0 with it. An earlier version of this fixture quoted
+  // #88 and #fff, which the carve-outs already removed, so it passed with
+  // inline masking deleted and tested nothing.
+  const inline = 'The escape rules trip people up. Write `#AI` for the tag, `#Innovation` for the category, `#Startups` for the vertical, `#Leadership` for the theme, `#Growth` for the metric, and `#FutureOfWork` when you mean the movement.';
+  const fenced = 'Here is the config we ship by default, and it has not changed in a year:\n\n```\n#alpha\n#beta\n#gamma\n#delta\n#epsilon\n#zeta\n```\n\nEverything below that line is user overridable and nothing above it is.';
+  for (const [label, text] of [['inline code', inline], ['fenced code', fenced]]) {
+    const types = new Set(AIDetector.analyzeText(text).issues.map((i) => i.type));
+    assert.ok(!types.has('hashtag-stuff'), `${label} should not count as hashtags`);
+  }
+});
+
+test('hashtag-stuff still counts short hex-shaped words, which are real tags', () => {
+  // #b2b, #e2e, #dad, #cafe, #ace and #face are ordinary tags. Carving out
+  // 3- and 4-digit hex to catch CSS palettes silently deleted true positives on
+  // the stuffed-block shape, so only 6- and 8-char forms CONTAINING A DIGIT are
+  // subtracted: #decade and #facade are a-f words, not colours.
+  const gtm = 'Great conversation on the go-to-market motion this week with the whole revenue team here.\n#b2b #e2e #saas #growth #ace #fade';
+  const family = 'Weekend was good and the whole family got outside for once this month together.\n#dad #cafe #beef #face #travel #weekend';
+  const decade = 'Reflecting on the last ten years of shipping developer tools to teams everywhere here.\n#decade #facade #deface #beaded #effaced #growth';
+  // Four spaces under a list marker is a paragraph continuation, not a code
+  // block, which is why indented runs are not masked.
+  const listed = '- We shipped the detector and the whole team is happy with how it landed today.\n\n    #AI #Innovation #FutureOfWork #MachineLearning #Leadership #Growth';
+  for (const [label, text] of [['b2b/e2e block', gtm], ['dad/cafe block', family], ['a-f word tags', decade], ['tags under a list item', listed]]) {
+    const types = new Set(AIDetector.analyzeText(text).issues.map((i) => i.type));
+    assert.ok(types.has('hashtag-stuff'), `${label} should still flag as hashtag stuffing`);
+  }
+});
+
+test('hashtag-stuff still fires on a tag block that also cites an issue', () => {
+  // The carve-outs subtract non-tag forms; they must not let a real block
+  // through because a `#88` sits beside it.
+  const text = 'Closed out #88 today and the release is live for everyone.\n#AI #Innovation #FutureOfWork #MachineLearning #Leadership #Growth #Startups';
+  const r = AIDetector.analyzeText(text);
+  const types = new Set(r.issues.map((i) => i.type));
+  assert.ok(types.has('hashtag-stuff'), 'expected hashtag-stuff on a 7-tag block');
+  assert.equal(
+    r.issues.find((i) => i.type === 'hashtag-stuff').text,
+    '7 hashtags',
+    'the issue reference must not be counted as a tag'
+  );
+});
+
+test('hashtag-stuff still fires on tags spread inline through a post', () => {
+  // Masking code and subtracting non-tag forms must not weaken the inline
+  // shape, which is the one a trailing-block-only rule would miss.
+  const text = 'Loving the #AI space right now, especially #MachineLearning and #DeepLearning, plus #Startups and #Innovation and #FutureOfWork keep me busy every single day of the week.';
+  const types = new Set(AIDetector.analyzeText(text).issues.map((i) => i.type));
+  assert.ok(types.has('hashtag-stuff'), 'expected hashtag-stuff on 6 inline tags');
+});
+
 test('low-ttr fires on a 200+ token text with narrow vocabulary', () => {
   // Vocabulary-poor synthetic sample: same 11-word sentence repeated.
   // ~200 tokens, ~11 unique = ~5% TTR. Well under the 40% threshold.
@@ -817,6 +893,187 @@ test('v2: context mode "technical" suppresses Title Case header flag', () => {
   const technicalHas = technical.issues.some((i) => i.type === 'title-case-header');
   assert.ok(generalHas, 'general mode should flag title-case header');
   assert.ok(!technicalHas, 'technical mode should suppress title-case header');
+});
+
+test('#62: Title Case flagged on a Markdown heading, not just a bare line', () => {
+  // The `^[A-Z]` anchor required the line to START with a capital, so a
+  // `## Heading` never matched — the first character is `#`. The rule missed
+  // the commonest way a heading is actually written while catching the bare
+  // form it gets converted from. Reported by a downstream vendoring the file.
+  const body =
+    '\n\nThe team closed three deals this quarter. Each agreement included revenue-share terms and dispute-resolution clauses. The legal review took two weeks per contract on average.';
+  for (const prefix of ['#', '##', '######']) {
+    const r = AIDetector.analyzeText(`${prefix} Strategic Negotiations And Key Partnerships${body}`, {
+      contextMode: 'general',
+    });
+    assert.ok(
+      r.issues.some((i) => i.type === 'title-case-header'),
+      `expected title-case-header on a "${prefix}" heading`,
+    );
+  }
+});
+
+test('#62: the heading fix does not flag sentence-case or non-headings', () => {
+  const body =
+    '\n\nThe team closed three deals this quarter. Each agreement included revenue-share terms and dispute-resolution clauses. The legal review took two weeks per contract on average.';
+  const cases = [
+    ['## Strategic negotiations and key partnerships', 'sentence-case heading is correct, not a tell'],
+    ['##Strategic Negotiations And Key Partnerships', 'no space after # is not a Markdown heading'],
+    ['####### Strategic Negotiations And Key Partnerships', 'seven hashes is not a heading'],
+  ];
+  for (const [line, why] of cases) {
+    const r = AIDetector.analyzeText(line + body, { contextMode: 'general' });
+    assert.ok(!r.issues.some((i) => i.type === 'title-case-header'), why);
+  }
+});
+
+// Prose long enough to clear the ten-word gate, appended to single-line fixtures.
+const HEADING_BODY =
+  '\n\nThe team closed three deals this quarter. Each agreement included revenue-share terms and dispute-resolution clauses. The legal review took two weeks per contract on average.';
+
+function titleCaseHits(text) {
+  const r = AIDetector.analyzeText(text, { contextMode: 'general' });
+  return r.issues.filter((i) => i.type === 'title-case-header');
+}
+
+// NOT covered, and deliberately so: a four-content-word Title Case heading such
+// as '# The Art Of War' or '## Notes On The Design' still fires. The >= 4 guard
+// cannot tell those from '## Benefits And Strategic Considerations' -- they are
+// the same shape. That is pre-existing behaviour, identical for the bare-line
+// form on main, and out of scope here.
+test('#62: legitimate three-word Title Case headings are not flagged', () => {
+  // The regression the first version of this fix shipped. matchPatterns reports
+  // match[0], so '## Terms Of Service' arrived with '##' as a token, silently
+  // lowering the proper-noun guard from four content words to three for
+  // headings only. These are ordinary human headings, on a detector whose
+  // stated first priority is not firing on human writing.
+  for (const heading of [
+    '## Terms Of Service',
+    '## Table Of Contents',
+    '## Bank Of America',
+    '## Pride And Prejudice',
+    '## Statement Of Work',
+  ]) {
+    assert.equal(titleCaseHits(heading + HEADING_BODY).length, 0, `must not flag: ${heading}`);
+  }
+});
+
+test('#62: a heading inside a fenced block is illustration, not a section header', () => {
+  // A document that documents Markdown is the normal case for this rule.
+  // Without the fence check, every docs page flags itself.
+  const fence = '```';
+  const text = [
+    'How to write documentation, briefly, with a worked example that follows.',
+    '',
+    fence + 'markdown',
+    '## Benefits And Strategic Considerations',
+    fence,
+    '',
+    'That is the shape to avoid in your own prose, not in a code sample.',
+  ].join('\n');
+  assert.equal(titleCaseHits(text).length, 0, 'a fenced example must not flag');
+});
+
+test('#62: headings opening with a function word are not the tell', () => {
+  // Measured on 81 files that provably predate LLMs (2018-19 eBooks stamped
+  // year: 2018/2019, 2020 posts): these fired 13 times on the branch and zero
+  // times on main. Every one opens with "The". The rule's own comment has
+  // always said the function word marks a MID-sentence "And"; the test never
+  // enforced it. Verbatim headings from that corpus.
+  for (const heading of [
+    '## The New Security Landscape',
+    '## The Microsoft Approach to Identity',
+    '### The Four Keys to a Successful and Secure Modern Workplace',
+    '## The Changing Face of Manufacturing',
+    '## The Key to Winning Georgia',
+    '## The Chain of Thought Podcast',
+  ]) {
+    assert.equal(titleCaseHits(heading + HEADING_BODY).length, 0, `must not flag: ${heading}`);
+  }
+});
+
+test('#62: an interior function word still flags, in both forms', () => {
+  // The other side of the guard above. If this ever goes quiet the rule is dead.
+  for (const heading of [
+    '## Benefits And Strategic Considerations',
+    'Benefits And Strategic Considerations',
+    '## Strategic Negotiations And Key Partnerships',
+  ]) {
+    assert.equal(titleCaseHits(heading + HEADING_BODY).length, 1, `must flag: ${heading}`);
+  }
+});
+
+test('#62: fences that a parity count gets wrong', () => {
+  const f3 = '```';
+  const f4 = '````';
+  const intro = 'Documentation about writing Markdown, long enough to clear the word gate.';
+  const title = '## Benefits And Strategic Considerations';
+
+  // A four-backtick fence wrapping a three-backtick example is how you document
+  // fences — the motivating case. Counting delimiters inverts on it.
+  assert.equal(
+    titleCaseHits([intro, f4, f3 + 'markdown', title, f3, f4].join('\n') + HEADING_BODY).length,
+    0,
+    'four-backtick outer fence',
+  );
+  // CommonMark allows up to three spaces of indent.
+  assert.equal(
+    titleCaseHits([intro, '   ' + f3, title, '   ' + f3].join('\n') + HEADING_BODY).length,
+    0,
+    'indented fence',
+  );
+  // An unclosed fence runs to end of document, as renderers treat it.
+  assert.equal(
+    titleCaseHits([intro, f3, title].join('\n') + HEADING_BODY).length,
+    0,
+    'unclosed fence',
+  );
+  // ...and a correctly closed one must not swallow what follows.
+  assert.equal(
+    titleCaseHits([intro, f3, 'code', f3, title].join('\n') + HEADING_BODY).length,
+    1,
+    'heading after a closed fence must still flag',
+  );
+});
+
+test('#62: MD_HEADING_PREFIX accepts what the pattern accepts', () => {
+  // The two must stay coupled: TITLE_CASE_HEADER matches `#{1,6}[ \t]+`, so if
+  // the prefix strip stops accepting a tab, `##` survives into the token list
+  // and reintroduces the ##-as-token bug this fix exists for.
+  //
+  // The probe has to open with a function word. On a heading whose function
+  // word is interior, an unstripped `##` only pushes the token COUNT up and the
+  // result is unchanged — mutation testing caught that a firing fixture here
+  // passes either way. Here the unstripped `##` shifts what slice(1) sees onto
+  // the leading "The", which flips the verdict.
+  assert.equal(
+    titleCaseHits('##\tThe New Security Landscape' + HEADING_BODY).length,
+    0,
+    'a tab-separated heading must strip like a space-separated one',
+  );
+  assert.equal(
+    titleCaseHits('##\tBenefits And Strategic Considerations' + HEADING_BODY).length,
+    1,
+    'and must still flag the real tell',
+  );
+});
+
+test('#62: an indented line is not a Markdown heading', () => {
+  // Kills the `#{0,6}` mutant: making the hash count optional turns any indented
+  // line into a heading, so four-space code blocks would flag.
+  assert.equal(
+    titleCaseHits('    Benefits And Strategic Considerations' + HEADING_BODY).length,
+    0,
+    'an indented line must not flag',
+  );
+});
+
+test('#62: the reported text is value-asserted, not merely present', () => {
+  // The whole change alters what match[0] contains, so assert the value. A
+  // presence-only check is what let the `##`-as-token defect through.
+  const hits = titleCaseHits('## Benefits And Strategic Considerations' + HEADING_BODY);
+  assert.equal(hits.length, 1);
+  assert.equal(hits[0].text.trim(), '## Benefits And Strategic Considerations');
 });
 
 test('v2: markdown **bold** is preserved by normalize pre-pass', () => {

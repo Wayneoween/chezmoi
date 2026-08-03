@@ -177,7 +177,7 @@ Trigger detect mode with: "detect," "flag only," "audit only," "just flag," "sca
 
 ## Pattern reference
 
-> Representative examples from the catalog — not the exhaustive list (that's [`SKILL.md`](./SKILL.md)). The skill's human-facing prose catalog and the [detector engine](./detector/) use **different counts on purpose**: the engine implements 45 `type` categories because it splits the vocabulary tiers and adds stylometric/fingerprint signals (punctuation distribution, function-word entropy, bypass-trick detection) that work as math over a document rather than as a rule you'd look up. The two are mapped in [`detector/CATEGORIES.md`](./detector/CATEGORIES.md); don't "fix" one count to match the other.
+> Representative examples from the catalog — not the exhaustive list (that's [`SKILL.md`](./SKILL.md)). The skill's human-facing prose catalog and the [detector engine](./detector/) use **different counts on purpose**: the engine implements 47 `type` categories because it splits the vocabulary tiers and adds stylometric/fingerprint signals (punctuation distribution, function-word entropy, bypass-trick detection) that work as math over a document rather than as a rule you'd look up. The two are mapped in [`detector/CATEGORIES.md`](./detector/CATEGORIES.md); don't "fix" one count to match the other.
 
 ### Content Patterns
 
@@ -323,7 +323,7 @@ That's 35+ AI tells.
 ## Run the detector
 
 The skill ships a deterministic, zero-dependency detection engine in
-[`detector/`](./detector/) — the same 45-category engine the rules above
+[`detector/`](./detector/) — the same engine the rules above
 describe, as runnable code. It works in Node (`>=18`) and the browser with no
 build step.
 
@@ -357,6 +357,31 @@ documentation with this repo's detector and publishes the result, including two
 defects the scan found in our own work. `npm run self-scan` reproduces it, and
 CI fails when a document drifts past its budget.
 
+## House style is a different job
+
+This skill removes AI-writing tells. It doesn't enforce a house style guide, and
+it ships no style guides of its own. There's no `--style` input. If you want
+house style applied in the same pass, put the guide in your agent's context
+alongside a [voice profile](#triggering-the-skill) and it should follow both,
+as instructions rather than as a checked rule set.
+
+If you want Google, Microsoft, Red Hat, or Salesforce style checked in CI,
+[Vale](https://github.com/vale-cli/vale) already covers that. Its
+[package registry](https://github.com/vale-cli/packages) carries
+Vale-compatible implementations of those four, alongside ports of `proselint`,
+`write-good`, and `alex`. The four style-guide packages are MIT-licensed, though
+the guides they implement are not always (see the audit below); the linter ports
+vary, and proselint's is BSD-3-Clause. The two tools do different jobs and
+compose: Vale gates a document against a rule set, applying fixes one alert at a
+time, while this skill rewrites whole passages as you draft.
+
+Paywalled guides (Chicago, APA, MLA, AP) have no machine-readable
+implementation here or in Vale, and won't get one here. Nothing in this repo
+could verify that a rewrite is Chicago-compliant, so claiming it would fail the
+same bar [`PROOF.md`](./PROOF.md) holds every other number to. The
+[license audit](https://github.com/conorbronsdon/avoid-ai-writing/issues/88)
+behind that line is public.
+
 ## Credits
 
 Pattern research informed by:
@@ -366,7 +391,7 @@ Pattern research informed by:
 - [brandonwise/humanizer](https://github.com/brandonwise/humanizer) — tiered vocabulary system, statistical analysis research (burstiness, sentence length variation, trigram repetition), and rewrite philosophy
 - [OpenClaw](https://github.com/openclaw/openclaw) humanizer skill ecosystem — community patterns and vocabulary research
 
-Authored by [Conor Bronsdon](https://github.com/conorbronsdon) · [LinkedIn](https://www.linkedin.com/in/conorbronsdon/) · [Chain of Thought podcast](https://chainofthought.show)
+Authored by [Conor Bronsdon](https://github.com/conorbronsdon) · [LinkedIn](https://www.linkedin.com/in/conorbronsdon/) · [Chain of Thought podcast](https://chainofthought.show/?utm_source=github&utm_medium=referral&utm_campaign=repo-readme&utm_content=avoid-ai-writing)
 
 ## Community / Multilingual
 
