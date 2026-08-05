@@ -1,6 +1,6 @@
 [tools]
 "pipx:jc" = "1.25.7"
-claude = "2.1.221"
+claude = "2.1.222"
 ctop = "0.7.7"
 flux2 = "2.9.3"
 fzf = "0.74.2"
