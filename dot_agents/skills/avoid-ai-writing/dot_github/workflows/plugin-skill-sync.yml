@@ -5,16 +5,26 @@ on:
     paths:
       - "SKILL.md"
       - "README.md"
+      # CLAUDE.md carries a checked copy of the pattern count; without this
+      # path the count guard never runs on a CLAUDE.md-only edit (PR #106
+      # had zero check runs - review finding on #111).
+      - "CLAUDE.md"
       - "plugins/**"
       - ".claude-plugin/**"
+      - "cursor-rules/**"
       - "scripts/**"
   push:
     branches: [main]
     paths:
       - "SKILL.md"
       - "README.md"
+      # CLAUDE.md carries a checked copy of the pattern count; without this
+      # path the count guard never runs on a CLAUDE.md-only edit (PR #106
+      # had zero check runs - review finding on #111).
+      - "CLAUDE.md"
       - "plugins/**"
       - ".claude-plugin/**"
+      - "cursor-rules/**"
       - "scripts/**"
 
 jobs:
@@ -34,12 +44,15 @@ jobs:
       - name: Regenerate bundled skill + check version
         run: bash scripts/sync-plugin-skill.sh
 
-      - name: Fail if the bundled skill drifted from SKILL.md
+      - name: Regenerate cursor rule
+        run: bash scripts/sync-cursor-rules.sh
+
+      - name: Fail if a generated copy drifted from SKILL.md
         run: |
           if ! git diff --quiet; then
-            echo "::error::plugins/avoid-ai-writing/skills/avoid-ai-writing/SKILL.md is out of sync with the root SKILL.md."
-            echo "Run 'bash scripts/sync-plugin-skill.sh' and commit the result."
+            echo "::error::A generated copy (plugins/ bundled skill or cursor-rules/avoid-ai-writing.mdc) is out of sync with the root SKILL.md."
+            echo "Run 'bash scripts/sync-plugin-skill.sh && bash scripts/sync-cursor-rules.sh' and commit the result."
             git --no-pager diff --stat
             exit 1
           fi
-          echo "bundled skill is in sync"
+          echo "generated copies are in sync"
