@@ -1,6 +1,6 @@
 [tools]
 "pipx:jc" = "1.25.7"
-claude = "2.1.224"
+claude = "2.1.226"
 ctop = "0.7.7"
 flux2 = "2.9.3"
 fzf = "0.74.2"
@@ -19,12 +19,12 @@ node = "26.7.0"
 prek = "0.4.12"
 python = "3.14"
 qdns = "0.19.12"
-rtk = "0.44.2"
+rtk = "0.45.0"
 rust = "1.97.1"
 terraform = "1.15.8"
 terragrunt = "1.1.2"
 tree-sitter = "0.26.11"
-uv = "0.12.2"
+uv = "0.12.3"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
