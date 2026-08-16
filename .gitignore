@@ -9,11 +9,22 @@ dot_DS_Store
 code/
 
 dot_agents/plans/*
-# Skills are installed by `npx skills` into ~/.agents/skills and recorded in the
-# lockfile. Don't commit vendored content or the lockfile — re-add them on a new
-# device with `npx skills`. Keeps future internal/private skills out of the repo
-# by default. Hand-authored personal skills (no upstream to restore from) are
-# allowlisted below so they survive a fresh bootstrap.
+# Skills live in ~/.agents/skills. The lockfile decides who owns each one:
+#
+#   in .skill-lock.json  -> `npx skills` owns it. .chezmoiignore skips it, so
+#                           allowlisting it here is dead weight: the file gets
+#                           committed but chezmoi never applies it. A new
+#                           machine gets it back by re-running `npx skills`.
+#   not in the lockfile  -> chezmoi owns it. Allowlist it below, or it exists
+#                           only on the machine that created it.
+#
+# The wildcard keeps vendored and work-internal skills out of this repo by
+# default. origin is public, so never allowlist anything sourced from a private
+# repo.
+#
+# TODO: most entries below are in the lockfile and are dead weight. Only
+# anti-ai-writing-style and simple-english still qualify. Drop the rest with
+# `git rm -r --cached`.
 dot_agents/skills/*
 dot_agents/dot_skill-lock.json
 !dot_agents/skills/anti-ai-writing-style/
