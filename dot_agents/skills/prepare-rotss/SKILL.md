@@ -37,6 +37,55 @@ Geh diese acht Bereiche systematisch durch:
 - Markiere Spoiler-Risiken (🔴) wenn Kampagneninhalte versehentlich
   vorweggenommen werden könnten
 - Fasse am Ende jeden Abschnitt sehr kurz zusammen bevor du weitermachst
+- **Schreib nur, was am Tisch passiert.** Keine Absätze darüber, was die Gruppe
+  NICHT erfahren kann, warum ein Check nicht möglich ist oder welche Regel hinter
+  einer Entscheidung steht. Das ist Bloat. Wenn ein Wiedererkennen nicht
+  funktioniert, lass es weg oder ersetz es durch einen Check, der funktioniert.
+  Begründungen gehören in die Chat-Antwort, nicht in die Session-Datei.
+
+## Zeichensetzung (harte Regel)
+
+- **Niemals Geviertstriche (—) und niemals Halbgeviertstriche (–).** Weder in
+  Prosa noch in Notizen, Dialogen, Überschriften oder Zahlenbereichen.
+  **Der einzige erlaubte Strich ist der Bindestrich (-).** Für Gedankenstriche
+  stattdessen Komma, Punkt, Doppelpunkt, Klammer oder ein umgebauter Satz. Für
+  Bereiche der Bindestrich: `H1-H10`, `1-10`, `2-3 Stunden`, `DC 20-Moral`.
+- **Niemals Semikolons (;).** Ein Semikolon wird entweder zu einem Punkt (zwei
+  eigenständige Sätze) oder zu einem Komma. In Aufzählungen von Werten und
+  Optionen wird daraus ein Komma, ein Zeilenumbruch oder ein eigener Bullet.
+  - Statt: *„Alle Türen verschlossen (DC 12 DEX; Aufbrechen alarmiert)"*
+  - Besser: *„Alle Türen verschlossen (DC 12 DEX). Aufbrechen alarmiert."*
+- Gilt für alles, was du schreibst: Chat-Antworten, Session-Prep,
+  Markdown-Ausgaben und Bearbeitungen bestehender Vault-Dateien.
+- Beim Bearbeiten fremder Zeilen gilt: neue und umgeschriebene Zeilen sind
+  sauber, alte Zeilen des SL werden nicht ungefragt umformatiert.
+
+## Regelbegriffe bleiben Englisch (harte Regel)
+
+Prosa, Beschreibungen und NSC-Dialoge sind Deutsch. **Alles, was am Spieltisch
+nachgeschlagen wird, bleibt im englischen Original und wird NIE übersetzt:**
+
+- **Statblock-Namen:** `Swarm of Witchbeetles`, `Saber-Toothed Tiger`,
+  `Ironwood Witch`, `Animated Armor`, `Rug of Smothering`, `Flying Sword`
+  (nicht „Käferschwarm", nicht „Fliegendes Schwert")
+- **Zauber:** `Mage Armor`, `Hold Person`, `Beacon of Hope`, `Symbol: Stunning`
+  (nicht „Zauberrüstung")
+- **Skill Checks und Attribute:** `DC 14 WIS Perception`, `DC 20 CHA Persuasion`,
+  `DC 12 STR Athletics`, `INT Investigation`, `CON Save`
+  (nicht „WEI Wahrnehmung", nicht „Rettungswurf auf Konstitution")
+- **Statblock-Fähigkeiten:** `Eyes of the Ironwood`, `Biting Swarm`,
+  `Stride of Steel`, `Legendary Actions`, `Recharge 6`
+- **Zustände:** `restrained`, `frightened`, `poisoned`, `stunned`, `prone`,
+  `exhaustion` (klein geschrieben, mitten im deutschen Satz)
+- **Magische Gegenstände:** `Tunic of the Witch`, `Ring of Protection`,
+  `Potion of Healing (greater)`
+
+Faustregel: Wenn der SL es im Regelwerk oder auf D&D Beyond suchen würde, steht
+es Englisch da. Wenn ein Spieler es hört, ist es Deutsch. Ein Satz darf beides
+mischen: *„**DC 15 CON Save**, sonst wird ihm schwarz vor Augen."*
+
+Ausnahmen, die trotzdem Deutsch bleiben (Vault-Konvention): Schadenstypen
+(Wucht, Stich, Hieb, Gift, Kälte, Feuer, Blitz), Ruhm, kurze/lange Rast.
 
 ## Typische Fragen je Bereich
 
