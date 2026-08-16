@@ -12,8 +12,9 @@ tests/
 *.tar.gz
 .pre-commit-config.yaml
 
-# macOS turd. Never manage these, at any depth.
+# macOS junk.
 .DS_Store
+**/.DS_Store
 {{ if ne .chezmoi.os "darwin" }}
 .config/starship.toml
 Brewfile
@@ -25,11 +26,9 @@ run_once_before_00-install-mise.sh
 .config/mise/config.toml
 {{ end }}
 
-# Skills installed by `npx skills` are owned by that tool, not chezmoi. It
-# rewrites the skill folder on update (adding/removing files), which chezmoi
-# would then report as drift forever. The list is derived from the lockfile at
-# apply time so no skill names are stored in this repo. Skills absent from the
-# lockfile stay chezmoi-managed.
+# Skills in the lockfile belong to `npx skills`. It rewrites those folders on
+# update, so chezmoi must skip them or it reports drift forever. Names are read
+# from the lockfile at apply time, so none are stored in this repo.
 {{- $lock := joinPath .chezmoi.homeDir ".agents/.skill-lock.json" }}
 {{- if stat $lock }}
 {{- range $name, $_ := (fromJson (output "cat" $lock)).skills }}
