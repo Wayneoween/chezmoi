@@ -21,3 +21,16 @@ run_once_before_00-install-mise.sh.tmpl
 run_once_before_00-install-mise.sh
 .config/mise/config.toml
 {{ end }}
+
+# Skills installed by `npx skills` are owned by that tool, not chezmoi. It
+# rewrites the skill folder on update (adding/removing files), which chezmoi
+# would then report as drift forever. The list is derived from the lockfile at
+# apply time so no skill names are stored in this repo. Skills absent from the
+# lockfile stay chezmoi-managed.
+{{- $lock := joinPath .chezmoi.homeDir ".agents/.skill-lock.json" }}
+{{- if stat $lock }}
+{{- range $name, $_ := (fromJson (output "cat" $lock)).skills }}
+.agents/skills/{{ $name }}
+{{- end }}
+{{- end }}
+.agents/.skill-lock.json
