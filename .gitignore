@@ -19,6 +19,7 @@ dot_agents/skills/*
 dot_agents/dot_skill-lock.json
 !dot_agents/skills/anti-ai-writing-style/
 !dot_agents/skills/avoid-ai-writing/
+!dot_agents/skills/bro/
 !dot_agents/skills/codebase-design/
 !dot_agents/skills/domain-modeling/
 !dot_agents/skills/git-commit/
