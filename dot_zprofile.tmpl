@@ -1,7 +1,7 @@
 {{ if eq .chezmoi.os "darwin" }}
+# Obsidian
+export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
+
 # brew zsh support
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-
-# Added by Obsidian
-export PATH="$PATH:/Applications/Obsidian.app/Contents/MacOS"
 {{ end }}
