@@ -35,3 +35,7 @@ dot_agents/dot_skill-lock.json
 !dot_agents/skills/simple-english/
 !dot_agents/skills/thermo-nuclear-code-quality-review/
 !dot_agents/skills/to-spec/
+
+# Plans are scratch thinking, not config. Repo is public on GitHub.
+# .chezmoiignore already keeps docs/ out of $HOME; this keeps them off the remote.
+**/docs/plans/
