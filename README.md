@@ -22,9 +22,14 @@ Once one machine is set up, `~/.zsh/install.sh` carries the setup elsewhere. The
 
 # or run it directly on the target machine
 ~/.zsh/install.sh local --env workstation
+
+# replace an existing chezmoi setup before installation
+~/.zsh/install.sh <ssh-host> --env server --purge
 ```
 
 The environment can be `workstation`, `devserver`, or `server`. If you omit it, chezmoi prompts for a value.
+
+The `--purge` option removes the existing chezmoi configuration, state, and source repository. It keeps the managed dotfiles and chezmoi binary.
 
 The remote path scp's the script over, installs chezmoi there, applies the repo, and sets `pull.rebase true`.
 

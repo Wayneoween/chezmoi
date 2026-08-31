@@ -6,7 +6,7 @@ set -e # -e: exit on error
 repo_default={{ .chezmoiRepo | quote }}
 
 print_help() {
-  echo "Usage: $0 <destination> [--repo <git-repo>] [-e|--env <environment>]"
+  echo "Usage: $0 <destination> [--repo <git-repo>] [-e|--env <environment>] [-p|--purge]"
   echo
   echo "This script installs chezmoi either locally or on a remote host."
   echo
@@ -19,12 +19,15 @@ print_help() {
   echo "  -e, --env"
   echo "               Set the machine environment: workstation, devserver, or server."
   echo "               If omitted, chezmoi will prompt for the environment."
+  echo "  -p, --purge  Purge existing chezmoi configuration, state, and source before init."
+  echo "               Managed dotfiles and the chezmoi binary remain."
   echo "  -h, --help   Show this help message."
 }
 
 install_local() {
   repo="$1"
   environment="$2"
+  purge="$3"
   if [ ! "$(command -v chezmoi)" ]; then
     bin_dir="$HOME/bin"
     chezmoi="$bin_dir/chezmoi"
@@ -40,6 +43,10 @@ install_local() {
     chezmoi=chezmoi
   fi
 
+  if [ "$purge" = true ]; then
+    "$chezmoi" purge --force
+  fi
+
   # exec: replace current process with chezmoi init
   if [ -n "$environment" ]; then
     exec "$chezmoi" init --promptChoice "Machine environment=$environment" "$repo"
@@ -52,13 +59,17 @@ install_remote() {
   repo="$1"
   remote_host="$2"
   environment="$3"
+  purge="$4"
   script_name="$(basename "$0")"
   scp "$0" "$remote_host:/tmp/$script_name"
+  remote_install_command="chmod +x /tmp/$script_name; /tmp/$script_name local --repo $repo"
   if [ -n "$environment" ]; then
-    ssh -S none -A -t "$remote_host" "chmod +x /tmp/$script_name; /tmp/$script_name local --repo $repo --env $environment"
-  else
-    ssh -S none -A -t "$remote_host" "chmod +x /tmp/$script_name; /tmp/$script_name local --repo $repo"
+    remote_install_command="$remote_install_command --env $environment"
   fi
+  if [ "$purge" = true ]; then
+    remote_install_command="$remote_install_command --purge"
+  fi
+  ssh -S none -A -t "$remote_host" "$remote_install_command"
   ssh -S none -A -t "$remote_host" "bin/chezmoi update"
   ssh -S none -A -t "$remote_host" "cd /home/marius/.local/share/chezmoi && git config pull.rebase true"
 }
@@ -66,6 +77,7 @@ install_remote() {
 # Parse command-line options
 repo="$repo_default"
 environment=
+purge=false
 while [ $# -gt 0 ]; do
   case "$1" in
     --repo)
@@ -88,6 +100,9 @@ while [ $# -gt 0 ]; do
           ;;
       esac
       ;;
+    -p|--purge)
+      purge=true
+      ;;
     -h|--help)
       print_help
       exit 0
@@ -107,7 +122,7 @@ if [ -z "$destination" ]; then
 fi
 
 if [ "$destination" = "local" ]; then
-  install_local "$repo" "$environment"
+  install_local "$repo" "$environment" "$purge"
 else
-  install_remote "$repo" "$destination" "$environment"
+  install_remote "$repo" "$destination" "$environment" "$purge"
 fi
