@@ -1,0 +1,22 @@
+[settings]
+enable_tools = [
+  "pipx:jc",
+  "ctop",
+  "fzf",
+  "gh",
+  "go",
+  "jd",
+  "jq",
+  "lazygit",
+  "mc",
+  "neovim",
+  "node",
+  "prek",
+  "python",
+  "qdns",
+  "rtk",
+  "rust",
+  "tree-sitter",
+  "uv",
+  "lazydocker",
+]

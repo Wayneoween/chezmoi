@@ -23,7 +23,12 @@ Brewfile
 {{ if or (eq .chezmoi.arch "armv6l") (eq .chezmoi.arch "armv7l") (eq .chezmoi.arch "arm") }}
 run_once_before_00-install-mise.sh.tmpl
 run_once_before_00-install-mise.sh
+run_once_after_00-install-mise-tools.sh.tmpl
+run_once_after_00-install-mise-tools.sh
 .config/mise/config.toml
+.config/mise/config.devserver.toml
+.config/mise/config.server.toml
+.config/mise/miserc.toml
 {{ end }}
 
 # Skills in the lockfile belong to `npx skills`. It rewrites those folders on

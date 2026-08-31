@@ -4,6 +4,8 @@
 {{-     $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{-   end -}}
 {{- end -}}
+{{- $miseEnvironments := list "workstation" "devserver" "server" -}}
+{{- $miseEnvironment := promptChoiceOnce . "miseEnvironment" "Machine environment" $miseEnvironments "workstation" -}}
 
 encryption = "age"
 
@@ -12,6 +14,7 @@ encryption = "age"
   recipient = "age1cxdntfp3yt8vhuq3mn0zplr8hugv3vell0fnxxvm473j0tedgdtss8dj4u"
 
 [data]
+  miseEnvironment = {{ $miseEnvironment | quote }}
   osid = {{ $osid | quote }}
 
 [git]

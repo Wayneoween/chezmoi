@@ -1,0 +1,10 @@
+[settings]
+enable_tools = [
+  "pipx:jc",
+  "ctop",
+  "fzf",
+  "jd",
+  "jq",
+  "mc",
+  "qdns",
+]

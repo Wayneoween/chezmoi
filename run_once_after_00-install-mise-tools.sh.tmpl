@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+{{ if eq .chezmoi.os "linux" }}
+{{   if and (ne .chezmoi.arch "armv6l") (ne .chezmoi.arch "armv7l") (ne .chezmoi.arch "arm") }}
+~/.local/bin/mise install
+{{   end }}
+{{ end }}

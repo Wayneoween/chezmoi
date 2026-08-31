@@ -18,11 +18,13 @@ Once one machine is set up, `~/.zsh/install.sh` carries the setup elsewhere. The
 
 ```sh
 # install onto a remote SSH host you can reach
-~/.zsh/install.sh <ssh-host>
+~/.zsh/install.sh <ssh-host> --env server
 
 # or run it directly on the target machine
-~/.zsh/install.sh local
+~/.zsh/install.sh local --env workstation
 ```
+
+The environment can be `workstation`, `devserver`, or `server`. If you omit it, chezmoi prompts for a value.
 
 The remote path scp's the script over, installs chezmoi there, applies the repo, and sets `pull.rebase true`.
 
