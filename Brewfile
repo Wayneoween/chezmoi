@@ -72,7 +72,6 @@ brew "colima", restart_service: :changed
 brew "coreutils"
 # Container Signing
 brew "cosign"
-# Good-lookin' diffs with diff-highlight and more
 # Load/unload environment variables based on $PWD
 brew "direnv"
 # Tool for exploring each layer in a docker image
