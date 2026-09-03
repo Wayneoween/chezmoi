@@ -73,7 +73,6 @@ brew "coreutils"
 # Container Signing
 brew "cosign"
 # Good-lookin' diffs with diff-highlight and more
-brew "diff-so-fancy"
 # Load/unload environment variables based on $PWD
 brew "direnv"
 # Tool for exploring each layer in a docker image

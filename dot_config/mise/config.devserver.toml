@@ -2,6 +2,7 @@
 enable_tools = [
   "pipx:jc",
   "ctop",
+  "delta",
   "fzf",
   "gh",
   "go",
