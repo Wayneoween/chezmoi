@@ -370,8 +370,6 @@ brew "janosmiko/tap/lfk", trusted: true
 brew "skyhook-io/tap/radar", trusted: true
 # Quickly repair outdated/broken Casks from homebrew-cask
 brew "vitorgalvao/tiny-scripts/cask-repair", trusted: true
-# Token usage tracker for AI agent CLIs (Claude Code, Codex, Cursor, Gemini, etc.)
-brew "xiufengsun/tokentracker/tokentracker", trusted: true
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -454,6 +452,8 @@ cask "stats"
 cask "steam"
 # Customizable email client
 cask "thunderbird"
+# Local-first AI token usage tracker menu bar app
+cask "xiufengsun/tokentracker/tokentracker"
 # Open-source code editor
 cask "visual-studio-code"
 # Multimedia player
