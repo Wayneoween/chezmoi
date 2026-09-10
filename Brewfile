@@ -6,6 +6,7 @@ tap "hashicorp/tap", trusted: true
 tap "hedhyw/main"
 tap "immanuwell/droast", "https://github.com/immanuwell/homebrew-droast.git"
 tap "janosmiko/tap"
+tap "nklmilojevic/sofka"
 tap "secureauthcorp/tap", "https://github.com/SecureAuthCorp/homebrew-tap.git", trusted: true
 tap "skyhook-io/tap"
 tap "vitorgalvao/tiny-scripts"
@@ -366,6 +367,8 @@ brew "hedhyw/main/jlv", trusted: true
 brew "immanuwell/droast/droast", trusted: true
 # Lightning Fast Kubernetes navigator - keyboard-focused TUI for managing K8s clusters
 brew "janosmiko/tap/lfk", trusted: true
+# Kubernetes TUI, reimagined in Rust
+brew "nklmilojevic/sofka/sofka", trusted: true
 # Modern Kubernetes visibility — topology, traffic, and Helm management
 brew "skyhook-io/tap/radar", trusted: true
 # Quickly repair outdated/broken Casks from homebrew-cask
