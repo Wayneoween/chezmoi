@@ -291,8 +291,6 @@ brew "renovate"
 brew "ripgrep"
 # Prevent committing secret keys into your source code
 brew "ripsecrets"
-# CLI proxy to minimize LLM token consumption
-brew "rtk"
 # Safe, concurrent, practical language
 brew "rust"
 # Get, set, and list display resolution
