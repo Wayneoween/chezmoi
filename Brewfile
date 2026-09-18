@@ -1,6 +1,7 @@
 tap "alesbrelih/gitlab-ci-ls"
 tap "charmbracelet/tap", trusted: true
 tap "derailed/popeye"
+tap "devenjarvis/tap"
 tap "fencesandbox/tap"
 tap "hashicorp/tap", trusted: true
 tap "hedhyw/main"
@@ -427,6 +428,8 @@ cask "keyboard-cleaner"
 cask "keyscreen"
 # GPU-based terminal emulator
 cask "kitty"
+# Generate, store, serve, verify, and extend hands-on technical tutorials
+cask "devenjarvis/tap/lathe", trusted: true
 # Discover, download, and run local LLMs
 cask "lm-studio"
 # Privacy-first, open-source platform for knowledge sharing and management
