@@ -414,8 +414,6 @@ cask "google-chrome"
 cask "google-drive"
 # Open-source video transcoder
 cask "handbrake-app"
-# Utility to hide menu bar items
-cask "hiddenbar"
 # Vector graphics editor
 cask "inkscape"
 # Terminal emulator as alternative to Apple's Terminal app
