@@ -14,7 +14,7 @@ kubectl = "1.37.0"
 kubectx = "0.11.0"
 kustomize = "5.8.1"
 lazygit = "0.65.1"
-mc = "latest"
+"github:pgsty/mc" = { version = "latest", exe = "mcli" }
 neovim = "0.12.5"
 node = "26.10.0"
 prek = "0.5.3"
