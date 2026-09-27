@@ -1,4 +1,5 @@
 [tools]
+"github:pgsty/mc" = { version = "latest", exe = "mcli" }
 "pipx:jc" = "1.26.0"
 claude = "2.1.283"
 ctop = "0.7.7"
@@ -13,18 +14,18 @@ krew = "0.5.0"
 kubectl = "1.37.1"
 kubectx = "0.11.0"
 kustomize = "5.8.1"
+lazydocker = "0.25.2"
 lazygit = "0.65.1"
-"github:pgsty/mc" = { version = "latest", exe = "mcli" }
 neovim = "0.12.5"
 node = "26.10.0"
 prek = "0.5.3"
 python = "3.14"
 qdns = "0.19.12"
+ripgrep = "15.2.0"
 rust = "1.98.1"
 terragrunt = "1.1.6"
 tree-sitter = "0.27.0"
 uv = "0.12.19"
-lazydocker = "0.25.2"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
