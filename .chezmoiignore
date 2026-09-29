@@ -41,3 +41,8 @@ run_once_after_00-install-mise-tools.sh
 {{- end }}
 {{- end }}
 .agents/.skill-lock.json
+
+# archify is vendored (not in the lockfile). Skip its test suite and the
+# rendered demo HTML; `archify examples` regenerates those.
+.agents/skills/archify/test
+.agents/skills/archify/examples/*.html
