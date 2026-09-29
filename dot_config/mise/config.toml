@@ -1,7 +1,7 @@
 [tools]
 "github:pgsty/mc" = { version = "latest", exe = "mcli" }
 "pipx:jc" = "1.26.0"
-claude = "2.1.283"
+claude = "2.1.284"
 ctop = "0.7.7"
 delta = "0.19.2"
 flux2 = "2.9.5"
@@ -25,7 +25,7 @@ ripgrep = "15.2.0"
 rust = "1.98.1"
 terragrunt = "1.1.6"
 tree-sitter = "0.27.0"
-uv = "0.12.19"
+uv = "0.12.20"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
