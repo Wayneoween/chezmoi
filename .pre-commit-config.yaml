@@ -3,15 +3,15 @@ repos:
     rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c  # frozen: v6.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: ^dot_agents/skills/archify/
+        exclude: ^dot_agents/skills/
       - id: end-of-file-fixer
         exclude: >
           (?x)^(
             dot_gemini/settings\.json
-          | dot_agents/skills/archify/.*
+          | dot_agents/skills/.*
           )$
       - id: check-added-large-files
-        exclude: ^dot_agents/skills/archify/
+        exclude: ^dot_agents/skills/
       - id: detect-private-key
   - repo: https://github.com/sirwart/ripsecrets
     rev: v0.1.11
