@@ -28,8 +28,19 @@ clean_branches() {
     # 3. Confirm and Destroy
     read "reply?Delete these branches? (y/N) "
     if [[ "$reply" =~ ^[Yy]$ ]]; then
-        echo "$branches_to_delete" | xargs git branch -D
-        echo "💥 Deleted."
+        # Drop worktree entries whose directory no longer exists (e.g. wiped /tmp)
+        git worktree prune
+        local branch wt
+        for branch in ${(f)branches_to_delete}; do
+            wt=$(git worktree list --porcelain | awk -v b="branch refs/heads/$branch" '/^worktree /{p=substr($0,10)} $0==b{print p}')
+            # `worktree remove` refuses dirty trees and the main worktree, so nothing unsaved gets lost
+            if [[ -n "$wt" ]] && ! git worktree remove "$wt"; then
+                echo "⚠️  Skipping $branch, its worktree at $wt could not be removed."
+                continue
+            fi
+            git branch -D "$branch"
+        done
+        echo "💥 Done."
     else
         echo "Aborted."
     fi
