@@ -31,15 +31,13 @@ run_once_after_00-install-mise-tools.sh
 .config/mise/miserc.toml
 {{ end }}
 
-# Skills in the lockfile belong to `npx skills`. It rewrites those folders on
-# update, so chezmoi must skip them or it reports drift forever. Names are read
-# from the lockfile at apply time, so none are stored in this repo.
-{{- $lock := joinPath .chezmoi.homeDir ".agents/.skill-lock.json" }}
-{{- if stat $lock }}
-{{- range $name, $_ := (fromJson (output "cat" $lock)).skills }}
-.agents/skills/{{ $name }}
-{{- end }}
-{{- end }}
+# ~/.agents/skills holds skills from several owners: `npx skills` (lockfile),
+# the Claude desktop app (synced/), a .trash folder, and local-only skills.
+# chezmoi manages only the allowlist below. Keep it in sync with .gitignore.
+.agents/skills/*
+!.agents/skills/anti-ai-writing-style
+!.agents/skills/archify
+!.agents/skills/simple-english
 .agents/.skill-lock.json
 
 # archify is vendored (not in the lockfile). Skip its test suite and the

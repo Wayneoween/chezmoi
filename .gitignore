@@ -9,33 +9,13 @@ dot_DS_Store
 code/
 
 dot_agents/plans/*
-# Skills in ~/.agents/skills. The lockfile says who owns each one.
-# In the lockfile: `npx skills` owns it. .chezmoiignore skips it, so listing it
-# here does nothing. A new machine gets it back with `npx skills`.
-# Not in the lockfile: chezmoi owns it. Allowlist it, or it stays on one machine.
+# Skills in ~/.agents/skills. Same allowlist as .chezmoiignore.
 # origin is public. Never allowlist a skill from a private repo.
-# TODO: most entries below are in the lockfile and can go.
 dot_agents/skills/*
 dot_agents/dot_skill-lock.json
 !dot_agents/skills/anti-ai-writing-style/
 !dot_agents/skills/archify/
-!dot_agents/skills/avoid-ai-writing/
-!dot_agents/skills/bro/
-!dot_agents/skills/codebase-design/
-!dot_agents/skills/domain-modeling/
-!dot_agents/skills/git-commit/
-!dot_agents/skills/grill-with-docs/
-!dot_agents/skills/grilling/
-!dot_agents/skills/handoff/
-!dot_agents/skills/improve-codebase-architecture/
-!dot_agents/skills/karpathy-guidelines/
-!dot_agents/skills/ponytail-audit/
-!dot_agents/skills/ponytail-debt/
-!dot_agents/skills/ponytail-review/
-!dot_agents/skills/ponytail/
 !dot_agents/skills/simple-english/
-!dot_agents/skills/thermo-nuclear-code-quality-review/
-!dot_agents/skills/to-spec/
 
 # Plans are scratch thinking, not config. Repo is public on GitHub.
 # .chezmoiignore already keeps docs/ out of $HOME; this keeps them off the remote.
