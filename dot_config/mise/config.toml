@@ -25,7 +25,7 @@ ripgrep = "15.2.0"
 rust = "1.99.0"
 terragrunt = "1.1.6"
 tree-sitter = "0.27.1"
-uv = "0.12.23"
+uv = "0.12.24"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
