@@ -18,8 +18,6 @@ brew "act"
 brew "age"
 # Slice and dice log files on the command-line
 brew "angle-grinder"
-# Cryptography and SSL/TLS Toolkit
-brew "openssl@3"
 # Planetarium for your terminal
 brew "astroterm"
 # Automatic configure script builder
@@ -44,6 +42,8 @@ brew "awscurl"
 brew "ncurses"
 # C library of Git core methods that is re-entrant and linkable
 brew "libgit2"
+# Cryptography and SSL/TLS Toolkit
+brew "openssl@3"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Parser generator
