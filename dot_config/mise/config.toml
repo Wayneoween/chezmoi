@@ -1,7 +1,7 @@
 [tools]
 "github:pgsty/mc" = { version = "latest", exe = "mcli" }
 "pipx:jc" = "1.26.0"
-claude = "2.1.296"
+claude = "2.1.300"
 ctop = "0.7.7"
 delta = "0.20.1"
 flux2 = "2.9.6"
@@ -17,7 +17,7 @@ kustomize = "5.8.3"
 lazydocker = "0.25.2"
 lazygit = "0.66.1"
 neovim = "0.12.6"
-node = "26.11.1"
+node = "26.12.0"
 prek = "0.5.5"
 python = "3.15"
 qdns = "0.19.12"
@@ -25,7 +25,7 @@ ripgrep = "15.2.0"
 rust = "1.99.0"
 terragrunt = "1.1.6"
 tree-sitter = "0.27.1"
-uv = "0.12.24"
+uv = "0.13.1"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
