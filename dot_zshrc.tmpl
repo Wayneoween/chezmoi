@@ -101,6 +101,10 @@ eval "$(direnv hook zsh)"
 if [ -f ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
   source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
+### wt - git worktree switcher (picker needs fzf)
+if [ -f ~/.zsh/wt/wt.zsh ]; then
+  source ~/.zsh/wt/wt.zsh
+fi
 ### zsh-syntax-highlight - must be last
 if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
   source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh

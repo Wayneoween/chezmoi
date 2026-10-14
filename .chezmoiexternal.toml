@@ -14,3 +14,9 @@
     exact = true
     stripComponents = 1
     refreshPeriod = "168h"
+[".zsh/wt"]
+    type = "archive"
+    url = "https://github.com/RyanJamesCaldwell/wt/archive/refs/heads/main.tar.gz"
+    exact = true
+    stripComponents = 1
+    refreshPeriod = "168h"
