@@ -440,22 +440,20 @@ cask "obsidian"
 cask "opal-composer"
 # Client program for the OpenVPN Access Server
 cask "openvpn-connect"
+# PDF editor
+cask "pdfcraft"
 # Workspace simplifier - to organize your workspace and boost your productivity
 cask "rambox"
 # Instant messaging application focusing on security
 cask "signal"
 # Team communication and collaboration software
 cask "slack"
-# Music streaming service
-cask "spotify"
 # System monitor for the menu bar
 cask "stats"
 # Video game digital distribution service
 cask "steam"
 # Customizable email client
 cask "thunderbird"
-# Local-first AI token usage tracker menu bar app
-cask "xiufengsun/tokentracker/tokentracker"
 # Open-source code editor
 cask "visual-studio-code"
 # Multimedia player
