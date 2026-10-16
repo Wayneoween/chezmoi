@@ -9,6 +9,7 @@
 	signingkey = ~/.ssh/id_ed25519.pub
 [alias]
 	b = branch
+	cow = "!f() { git worktree prune; wt=$(git worktree list --porcelain | awk -v b=\"refs/heads/$1\" '/^worktree /{p=substr($0,10)} $0==\"branch \"b{print p}'); { [ -z \"$wt\" ] || git worktree remove \"$wt\"; } && git checkout \"$1\"; }; f"
 	br = branch
 	ci = commit
 	co = checkout
