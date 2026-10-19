@@ -442,6 +442,8 @@ cask "opal-composer"
 cask "openvpn-connect"
 # PDF editor
 cask "pdfcraft"
+# Clears caches and junk files by moving them to the Trash
+cask "purge"
 # Workspace simplifier - to organize your workspace and boost your productivity
 cask "rambox"
 # Instant messaging application focusing on security
@@ -454,6 +456,8 @@ cask "stats"
 cask "steam"
 # Customizable email client
 cask "thunderbird"
+# Local-first AI token usage tracker menu bar app
+cask "xiufengsun/tokentracker/tokentracker", trusted: true
 # Open-source code editor
 cask "visual-studio-code"
 # Multimedia player
