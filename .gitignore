@@ -14,7 +14,6 @@ dot_agents/plans/*
 dot_agents/skills/*
 dot_agents/dot_skill-lock.json
 !dot_agents/skills/anti-ai-writing-style/
-!dot_agents/skills/archify/
 !dot_agents/skills/simple-english/
 
 # Plans are scratch thinking, not config. Repo is public on GitHub.
