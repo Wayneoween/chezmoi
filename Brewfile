@@ -468,5 +468,7 @@ cask "vorssaint"
 cask "wireshark-app"
 # Multiplayer code editor
 cask "zed"
+# Multiplayer environment for coding with agents
+cask "zed-delta"
 # Video communication and virtual meeting platform
 cask "zoom"
