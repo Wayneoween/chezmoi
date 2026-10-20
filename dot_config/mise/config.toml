@@ -6,7 +6,7 @@ ctop = "0.7.7"
 delta = "0.20.1"
 flux2 = "2.9.6"
 fzf = "0.74.5"
-gh = "2.102.0"
+gh = "2.102.1"
 go = "1.27.3"
 jd = "2.5.0"
 jq = "1.8.2"
@@ -25,7 +25,7 @@ ripgrep = "15.2.0"
 rust = "1.99.1"
 terragrunt = "1.1.6"
 tree-sitter = "0.27.1"
-uv = "0.13.3"
+uv = "0.13.4"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
