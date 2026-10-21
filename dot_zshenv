@@ -1,0 +1,5 @@
+# Read by every zsh, including non-interactive ones (agents, scripts, IDEs).
+# A fixed GOBIN keeps `go install` out of mise's per-version Go directory,
+# which mise deletes when it upgrades Go.
+export GOPATH="$HOME/go"
+export GOBIN="$GOPATH/bin"

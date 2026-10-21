@@ -53,9 +53,6 @@ fi
 
 # GoLang Env
 export GOROOT=$(mise where golang)
-export GOPATH="$HOME/go"
-export GOBIN="$GOPATH/bin"
-path=("$GOBIN" $path)
 
 # Starship Prompt
 eval "$(starship init zsh)"
@@ -111,5 +108,7 @@ if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
 fi
 
 typeset -U path PATH
+# GOPATH and GOBIN come from ~/.zshenv
+path=("$GOBIN" $path)
 path=("$HOME/.local/bin" $path)
 export PATH
