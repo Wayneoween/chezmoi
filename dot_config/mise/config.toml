@@ -1,10 +1,10 @@
 [tools]
-"github:pgsty/mc" = "RELEASE.2026-10-25T00-00-00Z"
+"github:pgsty/mc" = "RELEASE.2026-10-26T00-00-00Z"
 "pipx:jc" = "1.26.1"
 claude = "2.1.310"
 ctop = "0.7.7"
 delta = "0.20.1"
-flux2 = "2.9.6"
+flux2 = "2.10.0"
 fzf = "0.74.5"
 gh = "2.103.2"
 go = "1.27.3"
