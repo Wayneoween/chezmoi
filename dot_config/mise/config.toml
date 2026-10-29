@@ -1,6 +1,6 @@
 [tools]
 "github:pgsty/mc" = "RELEASE.2026-10-26T00-00-00Z"
-"pipx:jc" = "1.26.1"
+"pipx:jc" = "1.26.2"
 claude = "2.1.312"
 ctop = "0.7.7"
 delta = "0.20.1"
