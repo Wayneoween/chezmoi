@@ -1,0 +1,3 @@
+#!/bin/sh
+# Only owns .statusLine; Claude Code rewrites the rest of settings.json itself.
+jq -n '(try input catch {}) | .statusLine = {type: "command", command: "~/.claude/statusline.sh", refreshInterval: 5}'
