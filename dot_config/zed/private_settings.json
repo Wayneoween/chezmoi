@@ -8,12 +8,6 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "context_servers": {
-    "deja-context-server": {
-      "args": [
-        "mcp"
-      ],
-      "command": "/Users/marius/go/bin/deja"
-    }
   },
   "cli_default_open_behavior": "existing_window",
   "agent_servers": {
