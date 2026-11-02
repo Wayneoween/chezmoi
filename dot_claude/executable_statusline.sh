@@ -31,3 +31,14 @@ printf ' | \033[36m%s\033[00m' "$model"
 [[ -n $ctx ]] && printf ' | ctx %.0f%%' "$ctx"
 [[ -n $cost ]] && printf ' | $%.2f' "$cost"
 printf ' | %s' "$cache"
+h5=$(j '.rate_limits.five_hour.used_percentage | values | 100 - .')
+d7=$(j '.rate_limits.seven_day.used_percentage | values | 100 - .')
+lim() { # label, remaining %: yellow below 20, red below 10
+  local c=0 n=$(printf '%.0f' "$2")
+  (( n < 20 )) && c=33
+  (( n < 10 )) && c=31
+  printf ' | \033[%sm%s %d%%\033[00m' "$c" "$1" "$n"
+}
+[[ -n $h5 ]] && lim 5h "$h5"
+[[ -n $d7 ]] && lim 7d "$d7"
+exit 0
