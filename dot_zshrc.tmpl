@@ -90,8 +90,8 @@ fi
 source ~/.zsh/grml-zsh-includes/grml.zsh
 {{ end -}}
 
-# direnv loading
-eval "$(direnv hook zsh)"
+# direnv loading, servers have no direnv
+(( $+commands[direnv] )) && eval "$(direnv hook zsh)"
 
 ## zsh plugins
 ### zsh-autosuggestions

@@ -7,6 +7,7 @@ enable_tools = [
   "jd",
   "jq",
   "mc",
+  "prek",
   "qdns",
   "uv",
 ]
