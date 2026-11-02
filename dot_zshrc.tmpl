@@ -79,7 +79,7 @@ fi
 [[ $commands[krew] ]] && export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 
 # LM Studio CLI (lms)
-export PATH="$PATH:/Users/marius/.lmstudio/bin"
+export PATH="$PATH:$HOME/.lmstudio/bin"
 
 {{ else -}}
 # mise loading
@@ -113,4 +113,5 @@ typeset -U path PATH
 # GOPATH and GOBIN come from ~/.zshenv
 path=("$GOBIN" $path)
 path=("$HOME/.local/bin" $path)
+path=("$HOME/bin" $path)
 export PATH

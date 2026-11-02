@@ -7,7 +7,7 @@ My personal dotfiles, managed with [chezmoi](https://chezmoi.io). Works on macOS
 You need an SSH key that can clone the repo, plus internet access. chezmoi and everything else pulls itself in.
 
 ```sh
-sh -c "$(curl -fsSL get.chezmoi.io)" -- init --apply git@gitlab.com:marius.schuller/chezmoi.git
+sh -c "$(curl -fsSL get.chezmoi.io)" -- init --apply https://github.com/Wayneoween/chezmoi.git
 ```
 
 That clones into `~/.local/share/chezmoi`, applies the files, then runs the `run_once_` scripts: Homebrew + `brew bundle` on macOS, mise on Linux, and SSH `known_hosts` for GitHub and GitLab.

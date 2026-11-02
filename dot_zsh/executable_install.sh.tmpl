@@ -2,8 +2,8 @@
 
 set -e # -e: exit on error
 
-# Default repo
-repo_default={{ .chezmoiRepo | quote }}
+# Default repo: the one this machine cloned from (work: GitLab, private: GitHub)
+repo_default={{ output "git" "-C" .chezmoi.sourceDir "config" "--get" "remote.origin.url" | trim | quote }}
 
 print_help() {
   echo "Usage: $0 <destination> [--repo <git-repo>] [-e|--env <environment>] [-p|--purge]"
@@ -44,7 +44,9 @@ install_local() {
   fi
 
   if [ "$purge" = true ]; then
-    "$chezmoi" purge --force
+    # With git.autoCommit set, purge tries to commit in the source directory
+    # it has just removed, and exits non-zero. The purge itself succeeds.
+    "$chezmoi" purge --force || true
   fi
 
   # exec: replace current process with chezmoi init
@@ -71,7 +73,7 @@ install_remote() {
   fi
   ssh -S none -A -t "$remote_host" "$remote_install_command"
   ssh -S none -A -t "$remote_host" "bin/chezmoi update"
-  ssh -S none -A -t "$remote_host" "cd /home/marius/.local/share/chezmoi && git config pull.rebase true"
+  ssh -S none -A -t "$remote_host" "git -C .local/share/chezmoi config pull.rebase true"
 }
 
 # Parse command-line options

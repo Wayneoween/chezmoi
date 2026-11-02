@@ -102,13 +102,15 @@
 	gpgsign = true
 [help]
 	autocorrect = prompt
+{{ if ne .miseEnvironment "server" -}}
 [url "ssh://git@github.com/"]
 	insteadOf = https://github.com/
+{{ end -}}
 {{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.hostname "tiamat") }}
 [gpg]
 	format = ssh
 {{ end }}
 [maintenance]
-	repo = /Users/marius/code/ansible
-	repo = /Users/marius/code/wildfireservice
-	repo = /Users/marius/private/gl/marius-schuller.de
+	repo = {{ .chezmoi.homeDir }}/code/ansible
+	repo = {{ .chezmoi.homeDir }}/code/wildfireservice
+	repo = {{ .chezmoi.homeDir }}/private/gl/marius-schuller.de
