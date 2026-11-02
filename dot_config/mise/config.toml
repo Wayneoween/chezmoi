@@ -27,6 +27,7 @@ terragrunt = "1.2.1"
 tree-sitter = "0.27.1"
 uv = "0.13.6"
 glab = "1.127.0"
+codex = "0.166.0"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
