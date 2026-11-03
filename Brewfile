@@ -6,6 +6,7 @@ tap "fencesandbox/tap"
 tap "hashicorp/tap", trusted: true
 tap "hedhyw/main"
 tap "immanuwell/droast", "https://github.com/immanuwell/homebrew-droast.git"
+tap "ivankovic/omnidiff"
 tap "janosmiko/tap"
 tap "nklmilojevic/sofka"
 tap "secureauthcorp/tap", "https://github.com/SecureAuthCorp/homebrew-tap.git", trusted: true
@@ -302,6 +303,8 @@ brew "sd"
 brew "shellcheck"
 # Python library and command-line utility for Shodan
 brew "shodan"
+# Security scanner for AI agent skills
+brew "skillspector"
 # Count lines of code in many languages
 brew "sloccount"
 # Yet another network load monitor
@@ -364,6 +367,8 @@ brew "hashicorp/tap/packer"
 brew "hedhyw/main/jlv", trusted: true
 # Dockerfile linter with personality
 brew "immanuwell/droast/droast", trusted: true
+# Fast, robust, accurate content-aware diffing
+brew "ivankovic/omnidiff/omnidiff", trusted: true
 # Lightning Fast Kubernetes navigator - keyboard-focused TUI for managing K8s clusters
 brew "janosmiko/tap/lfk", trusted: true
 # Kubernetes TUI, reimagined in Rust
@@ -450,6 +455,8 @@ cask "rambox"
 cask "signal"
 # Team communication and collaboration software
 cask "slack"
+# Music streaming service
+cask "spotify"
 # System monitor for the menu bar
 cask "stats"
 # Video game digital distribution service
