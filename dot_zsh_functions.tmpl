@@ -45,3 +45,40 @@ clean_branches() {
         echo "Aborted."
     fi
 }
+{{- /* Docker format strings use {{ }} too, so the swarm helpers sit in a raw string (no backticks inside!) */}}
+{{ `
+# Docker Swarm helpers (run on a manager node)
+
+# swarm-node-services            -> docker service ls
+# swarm-node-services <node>...  -> running tasks on those nodes ("self" works too)
+swarm-node-services() {
+  if [[ -z $1 ]]; then docker service ls; return; fi
+  docker node ps "$@" --filter desired-state=running \
+    --format '{{.Name}}\t{{.Image}}\t{{.CurrentState}}\t{{.Error}}' \
+  | sed -E 's#\.[a-z0-9]{25}\t#\t#; s#\t[^\t]*/([^/\t]+)\t#\t\1\t#' \
+  | sort | { printf 'NAME\tIMAGE\tSTATE\tERROR\n'; cat; } | column -t -s $'\t'
+}
+
+# Where does a service run, and why did its last tasks die?
+swarm-service-where() {
+  docker service ps "$1" --no-trunc \
+    --format '{{.Name}}\t{{.Node}}\t{{.DesiredState}}\t{{.CurrentState}}\t{{.Error}}' \
+  | column -t -s $'\t'
+}
+
+# Services whose running replicas don't match the desired count
+swarm-degraded() {
+  docker service ls --format '{{.Name}}\t{{.Replicas}}' \
+  | awk -F'\t' '{split($2, r, "[/ ]"); if (r[1] != r[2]) print}' \
+  | column -t -s $'\t'
+}
+
+# Overlay peers per network, shows which IP each node advertises for VXLAN
+swarm-overlay-peers() {
+  local n
+  for n in $(docker network ls --filter driver=overlay -q); do
+    docker network inspect --verbose "$n" \
+      --format '{{.Name}}: {{range .Peers}}{{.Name}}={{.IP}} {{end}}'
+  done
+}
+` }}
