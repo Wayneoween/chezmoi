@@ -73,12 +73,13 @@ swarm-degraded() {
   | column -t -s $'\t'
 }
 
-# Overlay peers per network, shows which IP each node advertises for VXLAN
+# Overlay peers per network, mapped to hostnames by node address.
+# ?IP? = a peer whose VXLAN address isn't its swarm address (e.g. a GCP private IP).
 swarm-overlay-peers() {
   local n
   for n in $(docker network ls --filter driver=overlay -q); do
-    docker network inspect --verbose "$n" \
-      --format '{{.Name}}: {{range .Peers}}{{.Name}}={{.IP}} {{end}}'
-  done
+    docker network inspect --verbose "$n" --format '{{.Name}}:{{range .Peers}} {{.IP}}{{end}}'
+  done | awk 'NR == FNR {h[$1] = $2; next} {for (i = 2; i <= NF; i++) $i = ($i in h) ? h[$i] : "?" $i "?"} 1' \
+    <(docker node ls -q | xargs docker node inspect -f '{{.Status.Addr}} {{.Description.Hostname}}') -
 }
 ` }}
