@@ -110,6 +110,14 @@
 [gpg]
 	format = ssh
 {{ end }}
+{{- if eq .chezmoi.os "darwin" }}
+[diff]
+	tool = omnidiff
+[difftool "omnidiff"]
+	cmd = /opt/homebrew/bin/omnidiff \"$LOCAL\" \"$REMOTE\"
+[difftool]
+	prompt = false
+{{- end }}
 [maintenance]
 	repo = {{ .chezmoi.homeDir }}/code/ansible
 	repo = {{ .chezmoi.homeDir }}/code/wildfireservice

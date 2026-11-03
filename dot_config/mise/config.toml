@@ -1,7 +1,7 @@
 [tools]
 "github:pgsty/mc" = "RELEASE.2026-10-26T00-00-00Z"
 "pipx:jc" = "1.26.2"
-claude = "2.1.316"
+claude = "2.1.317"
 ctop = "0.7.7"
 delta = "0.20.1"
 flux2 = "2.10.0"
@@ -25,7 +25,7 @@ ripgrep = "15.2.0"
 rust = "1.99.1"
 terragrunt = "1.2.1"
 tree-sitter = "0.27.1"
-uv = "0.13.6"
+uv = "0.13.7"
 glab = "1.127.0"
 codex = "0.166.0"
 
