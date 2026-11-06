@@ -96,5 +96,12 @@ setup("docker_compose_language_service", {
   ) or nil,
 })
 
+-- Inlay hints (native; replaces the deleted MysticalDevil/inlay-hints.nvim)
+vim.lsp.inlay_hint.enable(true)
+vim.api.nvim_set_hl(0, "LspInlayHint", { link = "Comment", default = true })
+vim.api.nvim_create_user_command("InlayHintsToggle", function()
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = 0 }, { bufnr = 0 })
+end, { desc = "Toggle inlay hints on current buffer" })
+
 -- Example (disabled):
 -- setup("yamlls", { settings = { yaml = { } } })

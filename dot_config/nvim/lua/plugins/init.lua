@@ -41,8 +41,6 @@ return {
           pkg:install()
         end
       end
-      -- Filetype customizations
-      require "configs.filetype"
     end,
   },
   ---------------------------------------------------------------------------
@@ -90,18 +88,6 @@ return {
       --   go install github.com/daveshanley/vacuum@latest
       -- and ensure the binary is on PATH. It is configured in configs/lspconfig.lua
       -- but not managed by mason-lspconfig.
-    end,
-  },
-
-  ---------------------------------------------------------------------------
-  -- Inlay hints (after LSP attaches) --------------------------------------
-  ---------------------------------------------------------------------------
-  {
-    "MysticalDevil/inlay-hints.nvim",
-    event = "LspAttach",
-    dependencies = { "neovim/nvim-lspconfig" },
-    config = function()
-      require("inlay-hints").setup()
     end,
   },
 
@@ -182,23 +168,6 @@ return {
     lazy = false,
     config = function()
       require("nvim-rooter").setup()
-    end,
-  },
-  ---------------------------------------------------------------------------
-  -- filetype overrides (optional with 0.11) ----------------
-  ---------------------------------------------------------------------------
-  {
-    "nathom/filetype.nvim",
-    config = function()
-      require("filetype").setup {
-        overrides = {
-          extensions = {
-            tf = "terraform",
-            tfvars = "terraform",
-            tfstate = "json",
-          },
-        },
-      }
     end,
   },
   ---------------------------------------------------------------------------
@@ -309,7 +278,7 @@ return {
   -- Obsidian --------------------------------------------------------------
   ---------------------------------------------------------------------------
   {
-    "epwalsh/obsidian.nvim",
+    "obsidian-nvim/obsidian.nvim", -- community fork; epwalsh/obsidian.nvim is unmaintained
     ft = "markdown",
     lazy = true,
     dependencies = { "nvim-lua/plenary.nvim" },

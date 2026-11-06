@@ -47,6 +47,11 @@ vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
 })
 -- technically the better solution to above, but it's not working
 vim.filetype.add {
+  extension = {
+    tf = "terraform",
+    tfvars = "terraform",
+    tfstate = "json",
+  },
   pattern = {
     [".gitlab-ci.yml"] = "yaml.gitlab",
     ["compose.yml"] = "yaml.docker-compose",
