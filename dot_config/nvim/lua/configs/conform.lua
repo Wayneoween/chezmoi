@@ -1,10 +1,10 @@
 ---@diagnostic disable: undefined-global
-
-local opts = {
-  -- https://github.com/stevearc/conform.nvim/blob/master/doc/conform.txt
+-- https://github.com/stevearc/conform.nvim/blob/master/doc/conform.txt
+-- Conform does ALL format-on-save. Missing formatters are skipped silently;
+-- check with :ConformInfo.
+return {
   formatters_by_ft = {
-    -- dockerfile = {},
-    -- go = { "gofumpt" }, -- I think the golang plugin already does this
+    go = { "goimports", "gofumpt" },
     css = { "prettier" },
     hcl = { "terragrunt_hclfmt" },
     html = { "prettier" },
@@ -13,26 +13,14 @@ local opts = {
     python = { "ruff_format" },
     sh = { "shfmt" },
     terraform = { "tofu_fmt" },
-    tf = { "tofu_fmt" },
-    yaml = {},
-    ["yaml.ansible"] = {},
-    ["yaml.docker-compose"] = {},
-    ["yaml.gitlab"] = {},
-    ["yaml.openapi"] = {},
   },
   format_on_save = function(bufnr)
-    local name = vim.api.nvim_buf_get_name(bufnr)
-    if name:match "vars/users/all%.yml$" then
-      return -- skip formatting for this single file
+    if vim.api.nvim_buf_get_name(bufnr):match "vars/users/all%.yml$" then
+      return
     end
     if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
       return
     end
-    return {
-      timeout_ms = 500,
-      lsp_fallback = false,
-    }
+    return { timeout_ms = 500, lsp_format = "never" }
   end,
 }
-
-return opts
