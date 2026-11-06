@@ -1,14 +1,11 @@
 tap "alesbrelih/gitlab-ci-ls"
 tap "charmbracelet/tap", trusted: true
 tap "derailed/popeye"
-tap "devenjarvis/tap"
 tap "fencesandbox/tap"
 tap "hashicorp/tap", trusted: true
 tap "hedhyw/main"
 tap "immanuwell/droast", "https://github.com/immanuwell/homebrew-droast.git"
-tap "ivankovic/omnidiff"
 tap "janosmiko/tap"
-tap "nklmilojevic/sofka"
 tap "secureauthcorp/tap", "https://github.com/SecureAuthCorp/homebrew-tap.git", trusted: true
 tap "skyhook-io/tap"
 tap "vitorgalvao/tiny-scripts"
@@ -75,14 +72,14 @@ brew "colima", restart_service: :changed
 brew "coreutils"
 # Container Signing
 brew "cosign"
+# TIFF library and utilities
+brew "libtiff"
 # Load/unload environment variables based on $PWD
 brew "direnv"
 # Tool for exploring each layer in a docker image
 brew "dive"
 # Synchronize your DNS to multiple providers from a simple DSL
 brew "dnscontrol"
-# Global DNS propagation checker TUI
-brew "dnsglobe"
 # Pack, ship and run any application as a lightweight container
 brew "docker"
 # Docker CLI plugin for extended build capabilities with BuildKit
@@ -93,8 +90,6 @@ brew "docker-compose"
 brew "docuum"
 # Convert text between DOS, UNIX, and Mac formats
 brew "dos2unix"
-# Embeddable SQL OLAP Database Management System
-brew "duckdb"
 # Disk Usage/Free Utility - a better 'df' alternative
 brew "duf"
 # Quickly find duplicates in a set of files from the command-line
@@ -262,8 +257,6 @@ brew "pngcrush"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
 # Object-relational database system
-brew "postgresql@17", link: true
-# Object-relational database system
 brew "postgresql@18"
 # Framework for managing multi-language pre-commit hooks
 brew "pre-commit"
@@ -303,8 +296,6 @@ brew "sd"
 brew "shellcheck"
 # Python library and command-line utility for Shodan
 brew "shodan"
-# Security scanner for AI agent skills
-brew "skillspector"
 # Count lines of code in many languages
 brew "sloccount"
 # Yet another network load monitor
@@ -367,16 +358,14 @@ brew "hashicorp/tap/packer"
 brew "hedhyw/main/jlv", trusted: true
 # Dockerfile linter with personality
 brew "immanuwell/droast/droast", trusted: true
-# Fast, robust, accurate content-aware diffing
-brew "ivankovic/omnidiff/omnidiff", trusted: true
 # Lightning Fast Kubernetes navigator - keyboard-focused TUI for managing K8s clusters
 brew "janosmiko/tap/lfk", trusted: true
-# Kubernetes TUI, reimagined in Rust
-brew "nklmilojevic/sofka/sofka", trusted: true
 # Modern Kubernetes visibility — topology, traffic, and Helm management
 brew "skyhook-io/tap/radar", trusted: true
 # Quickly repair outdated/broken Casks from homebrew-cask
 brew "vitorgalvao/tiny-scripts/cask-repair", trusted: true
+# Token usage tracker for AI agent CLIs (Claude Code, Codex, Cursor, Gemini, etc.)
+brew "xiufengsun/tokentracker/tokentracker"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -431,8 +420,6 @@ cask "keyboard-cleaner"
 cask "keyscreen"
 # GPU-based terminal emulator
 cask "kitty"
-# Generate, store, serve, verify, and extend hands-on technical tutorials
-cask "devenjarvis/tap/lathe", trusted: true
 # Discover, download, and run local LLMs
 cask "lm-studio"
 # Privacy-first, open-source platform for knowledge sharing and management
@@ -445,10 +432,6 @@ cask "obsidian"
 cask "opal-composer"
 # Client program for the OpenVPN Access Server
 cask "openvpn-connect"
-# PDF editor
-cask "pdfcraft"
-# Clears caches and junk files by moving them to the Trash
-cask "purge"
 # Workspace simplifier - to organize your workspace and boost your productivity
 cask "rambox"
 # Instant messaging application focusing on security
@@ -463,19 +446,13 @@ cask "stats"
 cask "steam"
 # Customizable email client
 cask "thunderbird"
-# Local-first AI token usage tracker menu bar app
-cask "xiufengsun/tokentracker/tokentracker", trusted: true
 # Open-source code editor
 cask "visual-studio-code"
 # Multimedia player
 cask "vlc"
-# Menu bar toolkit with keep-awake, system monitor and volume mixer
-cask "vorssaint"
 # Network protocol analyzer
 cask "wireshark-app"
 # Multiplayer code editor
 cask "zed"
-# Multiplayer environment for coding with agents
-cask "zed-delta"
 # Video communication and virtual meeting platform
 cask "zoom"
