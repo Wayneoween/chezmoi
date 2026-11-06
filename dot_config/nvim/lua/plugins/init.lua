@@ -207,6 +207,33 @@ return {
     config = function(_, opts)
       require("mason").setup(opts)
       local registry = require "mason-registry"
+
+      -- Python-based packages live in a venv whose bin/python symlinks to the
+      -- interpreter it was built with. When that interpreter disappears (mise
+      -- minor-version bump + prune, or a deleted direnv project venv) the
+      -- symlink dangles and the tool dies silently. lstat finds the link,
+      -- stat follows it; link present + target missing = rebuild.
+      -- See docs/plans/mason-python-tool-breakage.md.
+      local function heal()
+        local healed = {}
+        for _, pkg in ipairs(registry.get_installed_packages()) do
+          local py = vim.env.MASON .. "/packages/" .. pkg.name .. "/venv/bin/python"
+          if vim.uv.fs_lstat(py) and not vim.uv.fs_stat(py) then
+            table.insert(healed, pkg.name)
+            pkg:install { force = true }
+          end
+        end
+        if #healed > 0 then
+          vim.notify("Mason: rebuilding " .. table.concat(healed, ", ") .. " (their Python is gone)")
+        end
+        return healed
+      end
+      vim.api.nvim_create_user_command("MasonHeal", function()
+        if #heal() == 0 then
+          vim.notify "Mason: all Python tools OK"
+        end
+      end, { desc = "Rebuild Mason packages whose Python interpreter is gone" })
+
       registry.refresh(function()
         for _, tool in ipairs(opts.ensure_installed) do
           local ok, pkg = pcall(registry.get_package, tool)
@@ -214,6 +241,7 @@ return {
             pkg:install()
           end
         end
+        heal()
       end)
     end,
   },
