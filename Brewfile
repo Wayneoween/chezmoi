@@ -422,8 +422,6 @@ cask "keyscreen"
 cask "kitty"
 # Discover, download, and run local LLMs
 cask "lm-studio"
-# Privacy-first, open-source platform for knowledge sharing and management
-cask "logseq"
 # Tool to control external monitor brightness & volume
 cask "monitorcontrol"
 # Knowledge base that works on top of a local folder of plain text Markdown files
