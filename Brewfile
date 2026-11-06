@@ -54,6 +54,8 @@ brew "btop"
 brew "caddy"
 # Console-based Audio Visualizer for ALSA
 brew "cava"
+# Console Bonsai is a bonsai tree generator, written in C using ncurses
+brew "cbonsai"
 # Tool for managing Juju Charms
 brew "charm"
 # Manage your dotfiles across multiple diverse machines, securely
