@@ -1,7 +1,7 @@
 [tools]
 "github:pgsty/mc" = "RELEASE.2026-10-26T00-00-00Z"
 "pipx:jc" = "1.26.2"
-claude = "2.1.318"
+claude = "2.1.319"
 ctop = "0.7.7"
 delta = "0.20.1"
 flux2 = "2.10.0"
@@ -24,10 +24,10 @@ qdns = "0.19.12"
 ripgrep = "15.2.0"
 rust = "1.99.1"
 terragrunt = "1.2.1"
-tree-sitter = "0.27.1"
+tree-sitter = "0.27.2"
 uv = "0.13.7"
 glab = "1.128.0"
-codex = "0.166.0"
+codex = "0.167.0"
 
 [settings]
 idiomatic_version_file_enable_tools = ["python"]
