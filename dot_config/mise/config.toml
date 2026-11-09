@@ -1,5 +1,5 @@
 [tools]
-"github:pgsty/mc" = "RELEASE.2026-10-26T00-00-00Z"
+"github:pgsty/mc" = "RELEASE.2026-11-09T00-00-00Z"
 "pipx:jc" = "1.26.2"
 claude = "2.1.319"
 ctop = "0.7.7"
