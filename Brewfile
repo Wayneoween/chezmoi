@@ -381,8 +381,6 @@ brew "nklmilojevic/sofka/sofka", trusted: true
 brew "skyhook-io/tap/radar", trusted: true
 # Quickly repair outdated/broken Casks from homebrew-cask
 brew "vitorgalvao/tiny-scripts/cask-repair", trusted: true
-# What's uncommitted, unpushed, and unreleased across every repo you own
-brew "yetidevworks/drydock/drydock", trusted: true
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
