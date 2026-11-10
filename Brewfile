@@ -14,7 +14,6 @@ tap "secureauthcorp/tap", "https://github.com/SecureAuthCorp/homebrew-tap.git", 
 tap "skyhook-io/tap"
 tap "vitorgalvao/tiny-scripts"
 tap "xiufengsun/tokentracker", "https://github.com/xiufengsun/homebrew-tokentracker.git", trusted: true
-tap "yetidevworks/drydock"
 # Run your GitHub Actions locally
 brew "act"
 # Simple, modern, secure file encryption
@@ -59,6 +58,8 @@ brew "btop"
 brew "caddy"
 # Console-based Audio Visualizer for ALSA
 brew "cava"
+# Console Bonsai is a bonsai tree generator, written in C using ncurses
+brew "cbonsai"
 # Tool for managing Juju Charms
 brew "charm"
 # Manage your dotfiles across multiple diverse machines, securely
@@ -477,6 +478,8 @@ cask "vlc"
 cask "vorssaint"
 # Network protocol analyzer
 cask "wireshark-app"
+# Word processor
+cask "wordcraft"
 # Multiplayer code editor
 cask "zed"
 # Multiplayer environment for coding with agents
